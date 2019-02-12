@@ -1,0 +1,161 @@
+{
+  "name": "human_services_data",
+  "title": "Human Services Data Specification Template",
+  "description": "This is a template datapackage.json file for producing a Tabular Data Package of data according to the Human Services Data Specification. You should provide an edited version of this file as part of any datapackage you provide, updating the title, description, license and homepage information to reflect the data you are publishing.",
+  "license": {
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "type": "CC-BY-SA-4.0",
+    "name": "Creative Commons Attribution-ShareAlike 4.0"
+  },
+  "version": "1.0",
+  "homepage": "http://docs.openreferral.org",
+  "resources": [{
+    "name": "organization",
+    "path": "resources/organizations.csv",
+    "description": "The organization record is used to provide basic description and details about each organization delivering services. Each service should be linked to the organization responsible for its delivery. One organization may deliver many services.",
+    "format": "csv",
+    "mediatype": "text/csv",
+    "schema": {
+      "fields": [{
+        "name": "id",
+        "type": "string",
+        "description": "Each organization must have a unique identifier.",
+        "format": "uuid",
+        "constraints": {
+          "required": true,
+          "unique": true
+        }
+      },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The official or public name of the organization.",
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "alternate_name",
+          "type": "string",
+          "description": "Alternative or commonly used name for the organization.",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "A brief summary about the organization. It can contain markup such as HTML or Markdown.",
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "description": "The contact e-mail address for the organization.",
+          "format": "email",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "format": "url",
+          "description": "The URL (website address) of the organization.",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "tax_status",
+          "type": "string",
+          "description": "Government assigned tax designation for tax-exempt organizations.",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "tax_id",
+          "type": "string",
+          "description": "A government issued identifier used for the purpose of tax administration.",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "year_incorporated",
+          "type": "date",
+          "format": "%Y",
+          "description": "The year in which the organization was legally formed.",
+          "constraints": {
+            "required": false
+          }
+        },
+        {
+          "name": "legal_status",
+          "type": "string",
+          "description": "The legal status defines the conditions that an organization is operating under; e.g. non-profit, private corporation or a government organization.",
+          "constraints": {
+            "required": false
+          }
+        }
+      ],
+      "primaryKey": "id"
+    }
+  },
+    {
+      "name": "program",
+      "path": "resources/programs.csv",
+      "description": "Some organizations organise their services into programs. A program brings together a number of related services.",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "schema": {
+        "fields": [{
+          "name": "id",
+          "type": "string",
+          "description": "Each program must have a unique identifier.",
+          "constraints": {
+            "required": true,
+            "unique": true
+          }
+        },
+          {
+            "name": "organization_id",
+            "type": "string",
+            "description": "Each program must belong to a single organization. The identifier of the organization should be given here.",
+            "format": "uuid",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "name",
+            "description": "The name of the program",
+            "type": "string",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "alternate_name",
+            "description": "An alternative name for the program",
+            "type": "string",
+            "constraints": {
+              "required": false
+            }
+          }
+        ],
+        "primaryKey": "id",
+        "foreignKeys": [{
+          "fields": "organization_id",
+          "reference": {
+            "resource": "organization",
+            "fields": "id"
+          }
+        }]
+      }
+    }
+  ]
+}
