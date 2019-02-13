@@ -6,7 +6,7 @@ require "pry"
 class OpenReferralTransformer
   ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
   LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
-  SERVICE_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
+  SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping
