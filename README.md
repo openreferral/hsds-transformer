@@ -17,6 +17,13 @@ The real-world case that's motivating this project is [Illinois Legal Aid Online
 
 This project uses ILAO's resource database in the form of three CSVs as the test case. The data was pulled in January 2019, with some records not having been updated since 2017, and therefore some of the data may not be accurate or up-to-date. The data is located in `spec/fixtures/input`.
 
+### Ideas for expansion
+* Automate uploading to Airtable in the [Open Referral Human Services Template](https://airtable.com/universe/expTMdQFD5r9G6V9Y/open-referral-human-services-template)
+* Incorporate the [OpenReferral Validator](https://github.com/spilio/openreferral-validator) to automatically validate data input/output
+* Plug into [API-in-a-Box](https://github.com/switzersc/api-in-a-box) to automatically create a hypermedia API on top of the created datapackage
+* Create a client library to generate a search UI on top of the created datapackage.
+
+
 ## How to use this tool
 First, double check whether your data is already HSDS-compliant with the [OpenReferral Validator](https://github.com/spilio/openreferral-validator).
 
