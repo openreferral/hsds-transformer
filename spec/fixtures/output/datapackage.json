@@ -120,7 +120,7 @@
             "required": true,
             "unique": true
           }
-        },
+          },
           {
             "name": "organization_id",
             "type": "string",
