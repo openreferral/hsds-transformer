@@ -29,11 +29,22 @@ First, double check whether your data is already HSDS-compliant with the [OpenRe
 
 If it is, voila!
 
-If it's not, proceed:
+If it's not, proceed.
 
-1. Make sure your data is saved locally as CSVs.
+### Installing
+1. Clone this repo locally.
+2. In terminal, `cd` into the root of the open_referral_transformer directory.
+3. Create a new file called `.env`. Copy the contents of `.env.example` into the new `.env` file and update `Users/your_user/dev/open_referral_transformer` to be the correct path to this directory on your local environment (you can run `pwd` in terminal to find this out).
+4. Install all the gems by running `bundle install`
 
+### Transforming
+
+1. Make sure your data is saved locally as CSVs in this directory.
+2. Create a mapping.yaml file and store it locally in this directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/open_referral_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
+3. Open up an interactive Ruby session in terminal by running `irb` (or `pry` - up to you!)
+4. Require the class: `require "./lib/open_referral_transformer"`
+5. Run the transformer: 
 ```
+OpenReferralTransformer.run(organizations: "path/to/organizations.csv", locations: "path/to/locations.csv", services: "path/to/services.csv", mapping: "path/to/mapping.yaml")
 ```
-
-## Installing
+6. Now check the `tmp` directory for your newly created HSDS files! 
