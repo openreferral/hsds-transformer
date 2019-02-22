@@ -47,4 +47,42 @@ If it's not, proceed.
 ```
 OpenReferralTransformer.run(organizations: "path/to/organizations.csv", locations: "path/to/locations.csv", services: "path/to/services.csv", mapping: "path/to/mapping.yaml")
 ```
-6. Now check the `tmp` directory for your newly created HSDS files! 
+6. Now check the `tmp` directory for your newly created HSDS files!
+
+## Related Projects
+
+Open Referral Playground App
+- Playground with various tools and code for working with Open Referral data
+- [Github](https://github.com/spilio/openreferral-playground)
+
+Open Referral Drupal
+- [Info](https://openreferral.org/implementing-openreferral-drupal-wordpress/)
+- [Github](https://github.com/openadvocate/openreferral-drupal)
+
+Open Referral Wordpress
+- [Github](https://github.com/openadvocate/openreferral-wordpress)
+
+Open Referral Laravel Services
+- Laravel/MySQL/Vue.js app
+- [Github](https://github.com/sarapis/orservices)
+
+Open Referral Validator
+- [Docs](https://spilio.github.io/openreferral-validator/)
+- [Github](https://github.com/spilio/openreferral-validator)
+
+Open Referral datapackage code
+- Repo containing some code exploring creating Open Referral Datapackages
+- [Github](https://github.com/timgdavies/OpenReferralTests)
+
+Open Referral Sample Data
+- Repo of sample data for use in projects
+- [Github](https://github.com/openreferral/sample-data)
+
+Open Referral Gem
+- This doesn't seem to have any actual code yet, but maybe the maintainer will update!
+- [Github](https://github.com/omnilord/open-referral-gem)
+
+Open Referral OpenAPI Specification
+- [Docs](https://openreferral.readthedocs.io/en/latest/hsda/)
+- [Githbu](https://github.com/openreferral/api-specification)
+
