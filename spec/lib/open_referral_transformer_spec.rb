@@ -1,6 +1,8 @@
 require "spec_helper"
 require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
 
+OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::OUTPUT_DIRECTORY_PATH
+
 describe OpenReferralTransformer do
 
   describe ".run" do
@@ -21,7 +23,6 @@ describe OpenReferralTransformer do
       )
 
       transformer.transform
-
       output_file = CSV.read transformer.output_phones_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/phones.csv"
       expect(output_file).to eq(fixture)
