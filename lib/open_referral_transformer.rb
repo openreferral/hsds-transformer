@@ -12,7 +12,7 @@ class OpenReferralTransformer
    
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
-              :services_path, :output_services_path, :mapping, :output_phones_path, :output_address_path
+              :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path
 
   attr_accessor :phone_data, :address_data
 
@@ -31,7 +31,7 @@ class OpenReferralTransformer
     @output_phones_path = "#{ENV["ROOT_PATH"]}/tmp/phones.csv"
     @phone_data = []
 
-    @output_address_path = "#{ENV["ROOT_PATH"]}/tmp/addresses.csv"
+    @output_addresses_path = "#{ENV["ROOT_PATH"]}/tmp/addresses.csv"
     @address_data = []
     
   end
@@ -147,7 +147,6 @@ class OpenReferralTransformer
   end
 
   def collect_address_data(address_key:, address_hash:, input:)
-    puts "Testing"
     key = address_hash["field"]
     address_row = {}
     address_row[key] = input[address_key]
@@ -159,9 +158,8 @@ class OpenReferralTransformer
   end
 
   def write_collected_nested_structures
-    puts address_data
     write_csv(output_phones_path, PHONE_HEADERS, phone_data)
-    write_csv(output_address_path, ADDRESS_HEADERS, address_data)
+    write_csv(output_addresses_path, ADDRESS_HEADERS, address_data)
   end
 
   def parse_mapping(mapping_path)

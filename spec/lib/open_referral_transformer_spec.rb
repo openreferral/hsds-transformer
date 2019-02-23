@@ -41,7 +41,7 @@ describe OpenReferralTransformer do
 
       transformer.transform
 
-      output_file = CSV.read transformer.output_address_path
+      output_file = CSV.read transformer.output_addresses_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/addresses.csv"
       expect(output_file).to eq(fixture)
     end
