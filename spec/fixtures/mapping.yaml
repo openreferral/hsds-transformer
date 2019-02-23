@@ -25,6 +25,11 @@ organizations:
     field: number
     foreign_key_name: organization_id
     foreign_key_value: Organization ID
+  Mailing address:
+    model: postal_address
+    field: address_1
+    foreign_key_name: organization_id
+    foreign_key_value: Organization ID   
 locations:
   Location_id: 
     model: locations
