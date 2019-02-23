@@ -39,4 +39,16 @@ describe OpenReferralTransformer do
     fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/services.csv"
     expect(output_file).to eq(fixture)
   end
+
+  it "creates phone records for phone numbers mapped in input csv" do
+    locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+    mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+    transformer = OpenReferralTransformer.new(locations: locations_file_path, mapping: mapping_path)
+
+    transformer.transform_locations
+
+    output_file = CSV.read transformer.output_phones_path
+    fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/phones.csv"
+    expect(output_file).to eq(fixture)
+  end
 end
