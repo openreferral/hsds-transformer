@@ -31,12 +31,15 @@ services:
   Services-ID:
     model: services
     field: id
+    required: true
   Title:
     model: services
     field: name
+    required: true
   Service type:
     model: services
     field: description
+    required: true
   Income eligibility and fees:
     model: services
     field: fees
