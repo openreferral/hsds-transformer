@@ -245,6 +245,8 @@ class OpenReferralTransformer
     unless res4 = validate(output_phones_path, "phone")
       puts "Phone data not valid"
     end
+  rescue Errno::ECONNREFUSED
+    puts "Can't connect to validation service."
   end
 
 end
