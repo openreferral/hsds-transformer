@@ -92,7 +92,14 @@ class OpenReferralTransformer
   def collect_address_data(address_key:, address_hash:, input:)
     key = address_hash["field"]
     address_row = {}
-    address_row[key] = input[address_key]
+    address = input[address_key]
+    postal_code = address.split(//).last(5).join
+    postal_code = postal_code.match(/\d{5}/)
+    if (postal_code != "")
+      address_row["postal_code"] = postal_code
+    end
+    address = address[0..-7] 
+    address_row[key] = address
 
     foreign_key = address_hash["foreign_key_name"]
     foreign_key_value = address_hash["foreign_key_value"]
