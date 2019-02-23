@@ -154,7 +154,7 @@ class OpenReferralTransformer
 
     foreign_key = address_hash["foreign_key_name"]
     foreign_key_value = address_hash["foreign_key_value"]
-    address_row[address_key] = input[foreign_key_value]
+    address_row[foreign_key] = input[foreign_key_value]
     address_data << address_row
   end
 
