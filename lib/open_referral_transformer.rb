@@ -37,18 +37,18 @@ class OpenReferralTransformer
   end
 
   def transform
-    transform_organizations if organizations_path
-    transform_locations if locations_path
-    transform_services if services_path
+    transform_each("organizations", organizations_path) if organizations_path
+    transform_each("locations", locations_path) if locations_path
+    transform_each("services", services_path) if services_path
 
     write_collected_nested_structures
 
     return self
   end
 
-  def transform_organizations
-    org_mapping = mapping["organizations"]
-    org_data = CSV.foreach(organizations_path, headers: true).each_with_object([]) do |input, array|
+  def transform_each(input_csv, path)
+    org_mapping = mapping[input_csv]
+    org_data = CSV.foreach(path, headers: true).each_with_object([]) do |input, array|
       row = {}
       valid = true
       org_mapping.each do |k, v|
@@ -58,7 +58,7 @@ class OpenReferralTransformer
             break
           end
         end
-        if v["model"] == "organizations"
+        if (v["model"] == input_csv)
           key = v["field"]
           row[key] = input[k]
         elsif v["model"] == "phones"
@@ -75,64 +75,7 @@ class OpenReferralTransformer
     write_csv(output_organizations_path, ORGANIZATION_HEADERS, org_data)
   end
 
-  def transform_locations
-    org_mapping = mapping["locations"]
-    org_data = CSV.foreach(locations_path, headers: true).each_with_object([]) do |input, array|
-      row = {}
-      valid = true
-      org_mapping.each do |k, v|
-        if v["required"] == true
-          if input[k].nil?
-            valid = false
-            break
-          end
-        end
-        if v["model"] == "locations"
-          key = v["field"]
-          row[key] = input[k]
-        elsif v["model"] == "phones"
-          collect_phone_data(phone_key: k, phone_hash: v, input: input)
-        elsif v["model"] == "postal_address"
-          collect_address_data(address_key: k, address_hash: v, input: input)
-        end
-      end
-      if valid
-        array << row
-      end
-    end
-
-    write_csv(output_locations_path, LOCATION_HEADERS, org_data)
-  end
-
-  def transform_services
-    org_mapping = mapping["services"]
-    org_data = CSV.foreach(services_path, headers: true).each_with_object([]) do |input, array|
-      row = {}
-      valid = true
-      org_mapping.each do |k, v|
-        if v["required"] == true
-          if input[k].nil?
-            valid = false
-            break
-          end
-        end
-        if v["model"] == "services"
-          key = v["field"]
-          row[key] = input[k]
-        elsif v["model"] == "phones"
-          collect_phone_data(phone_key: k, phone_hash: v, input: input)
-        elsif v["model"] == "postal_address"
-          collect_address_data(address_key: k, address_hash: v, input: input)
-        end
-      end
-      if valid
-        array << row
-      end
-    end
-
-    write_csv(output_services_path, SERVICE_HEADERS, org_data)
-  end
-
+  
   private
 
   def collect_phone_data(phone_key:, phone_hash:, input:)
@@ -149,7 +92,14 @@ class OpenReferralTransformer
   def collect_address_data(address_key:, address_hash:, input:)
     key = address_hash["field"]
     address_row = {}
-    address_row[key] = input[address_key]
+    address = input[address_key]
+    postal_code = address.split(//).last(5).join
+    postal_code = postal_code.match(/\d{5}/)
+    if (postal_code != "")
+      address_row["postal_code"] = postal_code
+    end
+    address = address[0..-7] 
+    address_row[key] = address
 
     foreign_key = address_hash["foreign_key_name"]
     foreign_key_value = address_hash["foreign_key_value"]

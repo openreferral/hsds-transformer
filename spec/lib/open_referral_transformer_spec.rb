@@ -53,7 +53,7 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(organizations: organizations_file_path, mapping: mapping_path)
 
-      transformer.transform_organizations
+      transformer.transform_each("organizations",organizations_file_path)
 
       output_file = CSV.read transformer.output_organizations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/organizations.csv"
@@ -67,7 +67,7 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(locations: locations_file_path, mapping: mapping_path)
 
-      transformer.transform_locations
+      transformer.transform_each("locations", locations_file_path)
 
       output_file = CSV.read transformer.output_locations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/locations.csv"
@@ -81,7 +81,7 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(services: services_file_path, mapping: mapping_path)
 
-      transformer.transform_services
+      transformer.transform_each("services",services_file_path)
 
       output_file = CSV.read transformer.output_services_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/services.csv"
