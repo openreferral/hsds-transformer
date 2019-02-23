@@ -12,6 +12,8 @@ class OpenReferralTransformer
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path
 
+  attr_accessor :phone_data
+
   def self.run(args)
     new(args).transform
   end
@@ -25,12 +27,16 @@ class OpenReferralTransformer
     @output_locations_path = "#{ENV["ROOT_PATH"]}/tmp/locations.csv"
     @output_services_path = "#{ENV["ROOT_PATH"]}/tmp/services.csv"
     @output_phones_path = "#{ENV["ROOT_PATH"]}/tmp/phones.csv"
+
+    @phone_data = []
   end
 
   def transform
-    transform_organizations
-    transform_locations
-    transform_services
+    transform_organizations if organizations_path
+    transform_locations if locations_path
+    transform_services if services_path
+
+    write_collected_nested_structures
 
     return self
   end
@@ -62,7 +68,6 @@ class OpenReferralTransformer
 
   def transform_locations
     org_mapping = mapping["locations"]
-    phone_data = []
     org_data = CSV.foreach(locations_path, headers: true).each_with_object([]) do |input, array|
       row = {}
       valid = true
@@ -77,17 +82,7 @@ class OpenReferralTransformer
           key = v["field"]
           row[key] = input[k]
         elsif v["model"] == "phones"
-          key = v["field"]
-          # row[key] = input[k]
-          phone_hash = {}
-          phone_hash[key] = input[k]
-
-          foreign_key = v["foreign_key_name"]
-          foreign_key_value = v["foreign_key_value"]
-          phone_hash[foreign_key] = input[foreign_key_value]
-          phone_data << phone_hash
-
-          # have a phones_array = [{location_id: Location_id, number: Phone number}]
+          collect_phone_data(phone_key: k, phone_hash: v, input: input)
         end
       end
       if valid
@@ -96,7 +91,6 @@ class OpenReferralTransformer
     end
 
     write_csv(output_locations_path, LOCATION_HEADERS, org_data)
-    write_csv(output_phones_path, PHONE_HEADERS, phone_data)
   end
 
   def transform_services
@@ -125,6 +119,21 @@ class OpenReferralTransformer
   end
 
   private
+
+  def collect_phone_data(phone_key:, phone_hash:, input:)
+    key = phone_hash["field"]
+    phone_row = {}
+    phone_row[key] = input[phone_key]
+
+    foreign_key = phone_hash["foreign_key_name"]
+    foreign_key_value = phone_hash["foreign_key_value"]
+    phone_row[foreign_key] = input[foreign_key_value]
+    phone_data << phone_row
+  end
+
+  def write_collected_nested_structures
+    write_csv(output_phones_path, PHONE_HEADERS, phone_data)
+  end
 
   def parse_mapping(mapping_path)
     YAML.load File.read(mapping_path)
