@@ -37,13 +37,22 @@ class OpenReferralTransformer
     org_mapping = mapping["organizations"]
     org_data = CSV.foreach(organizations_path, headers: true).each_with_object([]) do |input, array|
       row = {}
+      valid = true
       org_mapping.each do |k, v|
+        if v["required"] == true
+          if input[k].nil?
+            valid = false
+            break
+          end
+        end
         if v["model"] == "organizations"
           key = v["field"]
           row[key] = input[k]
         end
       end
-      array << row
+      if valid
+        array << row
+      end
     end
 
     write_csv(output_organizations_path, ORGANIZATION_HEADERS, org_data)
@@ -53,13 +62,22 @@ class OpenReferralTransformer
     org_mapping = mapping["locations"]
     org_data = CSV.foreach(locations_path, headers: true).each_with_object([]) do |input, array|
       row = {}
+      valid = true
       org_mapping.each do |k, v|
+        if v["required"] == true
+          if input[k].nil?
+            valid = false
+            break
+          end
+        end
         if v["model"] == "locations"
           key = v["field"]
           row[key] = input[k]
         end
       end
-      array << row
+      if valid
+        array << row
+      end
     end
 
     write_csv(output_locations_path, LOCATION_HEADERS, org_data)
@@ -69,13 +87,22 @@ class OpenReferralTransformer
     org_mapping = mapping["services"]
     org_data = CSV.foreach(services_path, headers: true).each_with_object([]) do |input, array|
       row = {}
+      valid = true
       org_mapping.each do |k, v|
+        if v["required"] == true
+          if input[k].nil?
+            valid = false
+            break
+          end
+        end
         if v["model"] == "services"
           key = v["field"]
           row[key] = input[k]
         end
       end
-      array << row
+      if valid
+        array << row
+      end
     end
 
     write_csv(output_services_path, SERVICE_HEADERS, org_data)
