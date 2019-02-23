@@ -1,0 +1,19 @@
+locations:
+  organization_uuid:
+    model: locations
+    field: organization_id
+  location_name:
+    model: locations
+    field: name
+  location_uuid:
+    model: locations
+    field: id
+  location_address:
+    model: locations
+    field: organization_id
+  location_url:
+    model: locations
+    field: organization_id
+  phones:
+    model: locations
+    field: organization_id
