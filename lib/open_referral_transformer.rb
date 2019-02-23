@@ -78,10 +78,51 @@ class OpenReferralTransformer
   
   private
 
+  def numeric?(lookAhead)
+    lookAhead =~ /[[:digit:]]/
+  end
+
+  def formatNumber(phone_number)
+    formatted_number = ""
+    
+
   def collect_phone_data(phone_key:, phone_hash:, input:)
     key = phone_hash["field"]
     phone_row = {}
-    phone_row[key] = input[phone_key]
+    whole_number = input[phone_key]
+
+    return unless whole_number
+
+    cell_number = ""
+    extension_number = ""
+
+    whole_number.each { |x|
+      if numeric?(x) != nil
+        if cell_number.length != 10
+          cell_number += x
+        else
+          extension_number += x    
+    }
+
+    
+
+    phone_row[key] = cell_number
+    if extension_number.length > 0
+      phone_row["extension"] = extension_number
+    
+
+    number_array = []
+    if whole_number.include? "x"
+      number_array = whole_number.split("x")
+      phone_row[key] = number_array[0].strip
+      phone_row["extension"] = number_array[1].strip
+    elsif whole_number.include? "ext."
+      number_array = whole_number.split("ext.")
+      phone_row[key] = number_array[0].strip
+      phone_row["extension"] = number_array[1].strip
+    else
+      phone_row[key] = whole_number
+    end
 
     foreign_key = phone_hash["foreign_key_name"]
     foreign_key_value = phone_hash["foreign_key_value"]
