@@ -1,0 +1,57 @@
+locations:
+  organization_uuid:
+    model: locations
+    field: organization_id
+  location_name:
+    model: locations
+    field: name
+  location_uuid:
+    model: locations
+    field: id
+  location_address:
+    model: postal_address
+    field: address_1
+    foreign_key_name: location_id
+    foreign_key_value: location_uuid
+  phones:
+    model: phones
+    field: number
+    foreign_key_name: location_id
+    foreign_key_value: location_uuid
+organizations:
+  organization_uuid:
+    model: organizations
+    field: id
+  organization_name:
+    model: organizations
+    field: name
+  organization_alternate_name:
+    model: organizations
+    field: alternative_name
+  organization_description:
+    model: organizations
+    field: description
+  organization_email:
+    model: organizations
+    field: email
+  organization_url:
+    model: organizations
+    field: url
+services:
+  service_uuid:
+    model: services
+    field: id
+  service_name:
+    model: services
+    field: name
+  service_description:
+    model: services
+    field: description
+  service_url:
+    model: services
+    field: url
+  organization_uuid:
+    model: services
+    field: organization_id
+  
+
