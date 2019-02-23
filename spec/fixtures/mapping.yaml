@@ -20,6 +20,11 @@ organizations:
   Website address:
     model: organizations
     field: url
+  Phone number:
+    model: phones
+    field: number
+    foreign_key_name: organization_id
+    foreign_key_value: Organization ID
 locations:
   Location_id: 
     model: locations

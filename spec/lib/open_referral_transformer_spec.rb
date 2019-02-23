@@ -10,8 +10,13 @@ describe OpenReferralTransformer do
   describe "#transform" do
     it "creates phone records for phone numbers mapped in input csv" do
       locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+      organizations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/organizations.csv"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer.new(locations: locations_file_path, mapping: mapping_path)
+      transformer = OpenReferralTransformer.new(
+        locations: locations_file_path,
+        organizations: organizations_file_path,
+        mapping: mapping_path
+      )
 
       transformer.transform
 
