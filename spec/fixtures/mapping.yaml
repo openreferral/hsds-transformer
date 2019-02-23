@@ -67,3 +67,8 @@ services:
     model: services
     field: organization_id
     required: true
+  Phone number:
+    model: phones
+    field: number
+    foreign_key_name: service_id
+    foreign_key_value: Services-ID

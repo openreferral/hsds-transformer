@@ -110,6 +110,8 @@ class OpenReferralTransformer
         if v["model"] == "services"
           key = v["field"]
           row[key] = input[k]
+        elsif v["model"] == "phones"
+          collect_phone_data(phone_key: k, phone_hash: v, input: input)
         end
       end
       if valid
