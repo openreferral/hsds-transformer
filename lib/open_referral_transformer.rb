@@ -63,10 +63,8 @@ class OpenReferralTransformer
 
     write_collected_nested_structures
 
-    res = validate(output_organizations_path, "organization")
-    if !res
-      puts "Output data is not valid"
-    end
+    validate_output
+
     return self
   end
 
@@ -233,4 +231,20 @@ class OpenReferralTransformer
     @valid = false
     return false
   end
+
+  def validate_output
+    unless validate(output_organizations_path, "organization")
+      puts "Organization data not valid"
+    end
+    unless res2 = validate(output_locations_path, "location")
+      puts "Location data not valid"
+    end
+    unless res3 = validate(output_services_path, "service")
+      puts "Service data not valid"
+    end
+    unless res4 = validate(output_phones_path, "phone")
+      puts "Phone data not valid"
+    end
+  end
+
 end
