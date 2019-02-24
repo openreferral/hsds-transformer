@@ -84,7 +84,6 @@ class OpenReferralTransformer
 
   def formatNumber(phone_number)
     formatted_number = ""
-
     index = 0
     phone_index = 0
     until index == 14
@@ -97,7 +96,7 @@ class OpenReferralTransformer
       elsif index == 9
         formatted_number += '-'
       else
-        formatted_number += phone_number.slice(phone_index)
+        formatted_number += phone_number.slice(phone_index).to_s
         phone_index += 1
       end
       index += 1
@@ -109,10 +108,11 @@ class OpenReferralTransformer
     key = phone_hash["field"]
     phone_row = {}
     whole_number = input[phone_key]
-    whole_number_arr = whole_number.split('')
 
     return unless whole_number
 
+    whole_number_arr = whole_number.split('')
+    
     cell_number = ""
     extension_number = ""
 
@@ -125,7 +125,6 @@ class OpenReferralTransformer
         end
       end
     end
-
     phone_row[key] = formatNumber(cell_number)
     if extension_number.length > 0
       phone_row["extension"] = extension_number
