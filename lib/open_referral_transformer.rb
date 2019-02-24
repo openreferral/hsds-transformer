@@ -4,6 +4,7 @@ require "yaml"
 require "pry"
 require "zip"
 require "zip/zip"
+require "rest_client"
 
 class OpenReferralTransformer
   ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
@@ -21,7 +22,7 @@ class OpenReferralTransformer
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path,
-              :output_schedules_path, :output_sal_path, :output_eligibilities_path
+              :output_schedules_path, :output_sal_path, :output_eligibilities_path, :valid
 
   attr_accessor :phone_data, :address_data, :schedule_data, :sal_data, :eligibilities_data
 
@@ -46,6 +47,8 @@ class OpenReferralTransformer
     @output_sal_path = @output_dir + "/service_at_location.csv"
     @output_eligibilities_path = @output_dir + '/eligibilities.csv'
 
+    @valid = true
+
     @phone_data = []
     @address_data = []
     @schedule_data = []
@@ -59,6 +62,8 @@ class OpenReferralTransformer
     transform_each("services", services_path) if services_path
 
     write_collected_nested_structures
+
+    validate_output
 
     return self
   end
@@ -212,6 +217,35 @@ class OpenReferralTransformer
         csv << CSV::Row.new(row.keys, row.values).values_at(*headers)
       end
     end
+  end
+
+  def validate(filename, type)
+    filename = "#{filename}"
+    file = File.new(filename, 'rb')
+    RestClient.post('http://localhost:1400/validate/csv',
+      {"file" => file,
+      "type" => type})
+    return true
+  rescue RestClient::BadRequest
+    @valid = false
+    return false
+  end
+
+  def validate_output
+    unless validate(output_organizations_path, "organization")
+      puts "Organization data not valid"
+    end
+    unless validate(output_locations_path, "location")
+      puts "Location data not valid"
+    end
+    unless validate(output_services_path, "service")
+      puts "Service data not valid"
+    end
+    unless validate(output_phones_path, "phone")
+      puts "Phone data not valid"
+    end
+  rescue Errno::ECONNREFUSED
+    puts "Can't connect to validation service."
   end
 
 end
