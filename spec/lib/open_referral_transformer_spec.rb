@@ -5,6 +5,8 @@ ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_statu
 LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
 SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
 PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
+OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::DEFAULT_OUTPUT_DIR
+
 
 describe OpenReferralTransformer do
 
@@ -26,7 +28,6 @@ describe OpenReferralTransformer do
       )
 
       transformer.transform
-
       output_file = CSV.read transformer.output_phones_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/phones.csv"
       expect(output_file).to eq(fixture)
@@ -48,6 +49,21 @@ describe OpenReferralTransformer do
 
       output_file = CSV.read transformer.output_addresses_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/addresses.csv"
+      expect(output_file).to eq(fixture)
+    end
+
+    it "creates schedule records for schedules mapped in input csv" do
+      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+      transformer = OpenReferralTransformer.new(
+        locations: locations_file_path,
+        mapping: mapping_path
+      )
+
+      transformer.transform
+
+      output_file = CSV.read transformer.output_schedules_path
+      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/schedules.csv"
       expect(output_file).to eq(fixture)
     end
   end
