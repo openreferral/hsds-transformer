@@ -8,12 +8,8 @@ class OpenReferralTransformer
   LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
   SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
-<<<<<<< Updated upstream
-  OUTPUT_DIRECTORY_PATH = "#{ENV["ROOT_PATH"]}/tmp"
-=======
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
-  OUTPUT_DEFAULT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
->>>>>>> Stashed changes
+  OUTPUT_DIRECTORY_PATH = "#{ENV["ROOT_PATH"]}/tmp"
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path
@@ -29,22 +25,14 @@ class OpenReferralTransformer
     @organizations_path = args[:organizations]
     @locations_path = args[:locations]
     @services_path = args[:services]
-    @output_dir = args[:output_dir]
+    @output_dir = args[:output_dir] || OUTPUT_DIRECTORY_PATH
     @output_organizations_path = @output_dir + "/organizations.csv"
-<<<<<<< Updated upstream
     @output_locations_path = @output_dir + "/locations.csv"
     @output_services_path = @output_dir + "/services.csv"
     @output_phones_path = @output_dir + "/phones.csv"
+    @output_addresses_path = @output_dir + "/addresses.csv"
     @phone_data = []
-=======
-    @output_locations_path =  @output_dir + "/locations.csv"
-    @output_services_path =  @output_dir + "/services.csv"
-    @output_phones_path =  @output_dir + "/phones.csv"
-    @phone_data = []
-    @output_addresses_path = "#{ENV["ROOT_PATH"]}/tmp/addresses.csv"
     @address_data = []
-    
->>>>>>> Stashed changes
   end
 
   def transform
