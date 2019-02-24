@@ -50,6 +50,11 @@ locations:
     model: regular_schedule
     foreign_key_name: location_id
     foreign_key_value: Location_id
+  Services:
+    model: service_at_locations
+    field: service_id
+    foreign_key_name: location_id
+    foreign_key_value: Location_id
 services:
   Services-ID:
     model: services
