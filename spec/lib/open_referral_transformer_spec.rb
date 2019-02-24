@@ -1,6 +1,11 @@
 require "spec_helper"
 require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
 
+ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
+LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
+SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
+PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
+
 describe OpenReferralTransformer do
 
   describe ".run" do
@@ -53,7 +58,7 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(organizations: organizations_file_path, mapping: mapping_path)
 
-      transformer.transform_each("organizations",organizations_file_path)
+      transformer.transform_each("organizations",organizations_file_path, transformer.output_organizations_path, ORGANIZATION_HEADERS)
 
       output_file = CSV.read transformer.output_organizations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/organizations.csv"
@@ -67,7 +72,7 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(locations: locations_file_path, mapping: mapping_path)
 
-      transformer.transform_each("locations", locations_file_path)
+      transformer.transform_each("locations", locations_file_path, transformer.output_locations_path, LOCATION_HEADERS)
 
       output_file = CSV.read transformer.output_locations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/locations.csv"
@@ -81,9 +86,9 @@ describe OpenReferralTransformer do
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(services: services_file_path, mapping: mapping_path)
 
-      transformer.transform_each("services",services_file_path)
-
       output_file = CSV.read transformer.output_services_path
+
+      transformer.transform_each("services",services_file_path, transformer.output_services_path, SERVICE_HEADERS)
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/services.csv"
       expect(output_file).to eq(fixture)
     end

@@ -77,3 +77,19 @@ services:
     field: number
     foreign_key_name: service_id
     foreign_key_value: Services-ID
+  Process for applying by email:
+    model: services
+    field: application_process
+    append: true
+  Process for applying by phone:
+    model: services
+    field: application_process
+    append: true
+  Process for applying online:
+    model: services
+    field: application_process
+    append: true
+  Process for walk-ins:
+    model: services
+    field: application_process
+    append: true
