@@ -221,7 +221,6 @@ class OpenReferralTransformer
 
   def validate(filename, type)
     filename = "C:#{filename}"
-    puts filename
     file = File.new(filename, 'rb')
     RestClient.post('http://localhost:1400/validate/csv',
       {"file" => file,
@@ -236,13 +235,13 @@ class OpenReferralTransformer
     unless validate(output_organizations_path, "organization")
       puts "Organization data not valid"
     end
-    unless res2 = validate(output_locations_path, "location")
+    unless validate(output_locations_path, "location")
       puts "Location data not valid"
     end
-    unless res3 = validate(output_services_path, "service")
+    unless validate(output_services_path, "service")
       puts "Service data not valid"
     end
-    unless res4 = validate(output_phones_path, "phone")
+    unless validate(output_phones_path, "phone")
       puts "Phone data not valid"
     end
   rescue Errno::ECONNREFUSED
