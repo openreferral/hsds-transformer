@@ -55,6 +55,11 @@ locations:
     field: service_id
     foreign_key_name: location_id
     foreign_key_value: Location_id
+  Income standard for eligibility:
+    model: eligibilities
+    field: eligibility
+    foreign_key_name: service_id
+    foreign_key_value: Services
 services:
   Services-ID:
     model: services
