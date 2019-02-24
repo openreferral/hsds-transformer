@@ -3,20 +3,58 @@ require "csv"
 require "yaml"
 require "pry"
 require "sinatra"
+require "sinatra/base"
+require "zip"
+require "zip/zip"
+#require "net/http"
 
+class Api < Sinatra::Base
 
-get '/' do
-  'Hello world!'
+  before do
+    content_type 'multipart/form-data'
+  end
+
+  get "/transform" do
+    "Submit your data uri"
+  end
+
+  post "/transform" do
+    locations_uri = params[:locations]
+    organizations_uri = params[:organizations]
+    services_uri = params[:services]
+    mapping_uri = params[:mapping]
+
+    if mapping_uri.nil?
+      halt 422, "A mapping file is required."
+    end
+
+    transformer = OpenReferralTransformer.new(
+      locations: locations_uri,
+      organizations: organizations_uri,
+      services: services_uri,
+      mapping: mapping_uri)
+
+    transformer.transform
+
+    directory = '/tmp'
+    zipfile_name = 'data.zip'
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      Dir[File.join(directory, '*')].each do |file|
+        zipfile.add(file.sub(directory, ''), file)
+      end
+    end
+
+    send_file './data'
+  end
 end
 
+# uri = URI.parse("http://localhost:4567")
 
-uri = URI.parse("http://localhost:4567")
-
-http = Net::HTTP.new(uri.host, uri.port)
-request = Net::HTTP::Post.new("/v1.1/auth")
+# http = Net::HTTP.new(uri.host, uri.port)
+# request = Net::HTTP::Post.new("/v1.1/auth")
 # request.add_field('Content-Type', 'application/json')
 # request.body = {'credentials' => ''}
-response = http.request(request)
+#response = http.request(request)
 
 
 
@@ -136,7 +174,10 @@ class OpenReferralTransformer
   end
 
   def parse_mapping(mapping_path)
+    # uri = URI(mapping_path)
+    # file = Net::HTTP.get(uri)
     YAML.load File.read(mapping_path)
+    #YAML.load file
   end
 
   def write_csv(path, headers, data)

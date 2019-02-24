@@ -22,6 +22,9 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    rubyzip (1.2.2)
+    zip-zip (0.3)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
   ruby
@@ -32,6 +35,8 @@ DEPENDENCIES
   pry
   rb-readline
   rspec
+  rubyzip
+  zip-zip
 
 BUNDLED WITH
    1.17.1
