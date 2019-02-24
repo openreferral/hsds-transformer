@@ -75,22 +75,7 @@ class OpenReferralTransformer
         elsif v["model"] == "postal_address"
           collect_address_data(address_key: k, address_hash: v, input: input)
         elsif v["model"] == "regular_schedule"
-          if input["Hours of operation"] != nil
-            regex_list = input["Hours of operation"].scan(/\S*day: \S*/)
-            for regex in regex_list do
-              day = regex.split(': ')[0]
-              hours = regex.split(': ')[1]
-              if hours == "Closed"
-                opens_at = nil
-                closes_at = nil
-              else
-                opens_at = hours.split('-')[0]
-                closes_at = hours.split('-')[1]
-              end
-              collect_schedule_data(schedule_key: k, schedule_hash: v, input: input,
-                                    day: day, opens_at: opens_at, closes_at: closes_at)
-            end
-          end
+          process_regular_schedule_text(schedule_key: k, schedule_hash: v, input: input)
         end
       end
       if valid
@@ -138,12 +123,29 @@ class OpenReferralTransformer
     address_data << address_row
   end
 
+  def process_regular_schedule_text(schedule_key:, schedule_hash:, input:)
+    if input["Hours of operation"]
+      regex_list = input["Hours of operation"].scan(/\S*day: \S*/)
+      for regex in regex_list do
+        day = regex.split(': ')[0]
+        hours = regex.split(': ')[1]
+        if hours == "Closed"
+          opens_at = nil
+          closes_at = nil
+        else
+          opens_at = hours.split('-')[0]
+          closes_at = hours.split('-')[1]
+        end
+        collect_schedule_data(schedule_key: schedule_key,
+            schedule_hash: schedule_hash, input: input,
+            day: day, opens_at: opens_at, closes_at: closes_at)
+      end
+    end
+  end
+
   def collect_schedule_data(schedule_key:, schedule_hash:, input:,
       day:, opens_at:, closes_at:)
-    # key = schedule_hash["field"]
     schedule_row = {}
-    # schedule_row[key] = input[schedule_key]
-
     schedule_row["weekday"] = day
     schedule_row["opens_at"] = opens_at
     schedule_row["closes_at"] = closes_at
