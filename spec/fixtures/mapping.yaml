@@ -29,7 +29,7 @@ organizations:
     model: postal_address
     field: address_1
     foreign_key_name: organization_id
-    foreign_key_value: Organization ID   
+    foreign_key_value: Organization ID
 locations:
   Location_id: 
     model: locations
@@ -44,6 +44,10 @@ locations:
   Phone number:
     model: phones
     field: number
+    foreign_key_name: location_id
+    foreign_key_value: Location_id
+  Hours of operation:
+    model: regular_schedule
     foreign_key_name: location_id
     foreign_key_value: Location_id
 services:
