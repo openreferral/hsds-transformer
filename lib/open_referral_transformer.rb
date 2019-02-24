@@ -60,9 +60,11 @@ class OpenReferralTransformer
         end
         if (v["model"] == input_csv)
           key = v["field"]
-          if v["append"] == true
+          if v["append"]
             row[key] = '' unless row[key]
-            row[key] += input[k].to_s
+            if input[k] 
+              row[key] += input[k].to_s
+            end
           else
             row[key] = input[k]
           end
