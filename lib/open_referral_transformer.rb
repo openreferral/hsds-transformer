@@ -36,15 +36,17 @@ class Api < Sinatra::Base
 
     transformer.transform
 
-    directory = '/tmp'
+    directory = '\tmp'
     zipfile_name = 'data.zip'
+    p directory
+    p Dir.glob(File.join(directory, '*'))
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      Dir[File.join(directory, '*')].each do |file|
+      Dir.glob(File.join(directory, '*')).each do |file|
         zipfile.add(file.sub(directory, ''), file)
       end
     end
 
-    send_file './data'
+    send_file '\data'
   end
 end
 
