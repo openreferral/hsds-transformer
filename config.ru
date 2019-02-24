@@ -1,2 +1,2 @@
-require "./lib/open_referral_transformer.rb"
+require "./lib/api.rb"
 run Api
