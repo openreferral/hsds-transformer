@@ -220,7 +220,7 @@ class OpenReferralTransformer
   end
 
   def validate(filename, type)
-    filename = "C:#{filename}"
+    filename = "#{filename}"
     file = File.new(filename, 'rb')
     RestClient.post('http://localhost:1400/validate/csv',
       {"file" => file,
