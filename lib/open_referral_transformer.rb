@@ -9,13 +9,17 @@ class OpenReferralTransformer
   SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
+  SCHEDULE_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
+
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
 
-  attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
-              :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path
 
-  attr_accessor :phone_data, :address_data
+  attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
+              :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path,
+              :output_schedules_path
+
+  attr_accessor :phone_data, :address_data, :schedule_data
 
   def self.run(args)
     new(args).transform
@@ -26,6 +30,7 @@ class OpenReferralTransformer
     @organizations_path = args[:organizations]
     @locations_path = args[:locations]
     @services_path = args[:services]
+
     @output_dir = args[:output_dir] || DEFAULT_OUTPUT_DIR
 
     @output_organizations_path = @output_dir + "/organizations.csv"
@@ -33,9 +38,11 @@ class OpenReferralTransformer
     @output_services_path = @output_dir + "/services.csv"
     @output_phones_path = @output_dir + "/phones.csv"
     @output_addresses_path = @output_dir + "/addresses.csv"
+    @output_schedules_path = @output_dir + "/schedules.csv"
 
     @phone_data = []
     @address_data = []
+    @schedule_data = []
   end
 
   def transform
@@ -67,6 +74,8 @@ class OpenReferralTransformer
           collect_phone_data(phone_key: k, phone_hash: v, input: input)
         elsif v["model"] == "postal_address"
           collect_address_data(address_key: k, address_hash: v, input: input)
+        elsif v["model"] == "regular_schedule"
+          process_regular_schedule_text(schedule_key: k, schedule_hash: v, input: input)
         end
       end
       if valid
@@ -77,7 +86,6 @@ class OpenReferralTransformer
     write_csv(output_organizations_path, ORGANIZATION_HEADERS, org_data)
   end
 
-  
   private
 
   def collect_phone_data(phone_key:, phone_hash:, input:)
@@ -115,9 +123,43 @@ class OpenReferralTransformer
     address_data << address_row
   end
 
+  def process_regular_schedule_text(schedule_key:, schedule_hash:, input:)
+    if input["Hours of operation"]
+      regex_list = input["Hours of operation"].scan(/\S*day: \S*/)
+      for regex in regex_list do
+        day = regex.split(': ')[0]
+        hours = regex.split(': ')[1]
+        if hours == "Closed"
+          opens_at = nil
+          closes_at = nil
+        else
+          opens_at = hours.split('-')[0]
+          closes_at = hours.split('-')[1]
+        end
+        collect_schedule_data(schedule_key: schedule_key,
+            schedule_hash: schedule_hash, input: input,
+            day: day, opens_at: opens_at, closes_at: closes_at)
+      end
+    end
+  end
+
+  def collect_schedule_data(schedule_key:, schedule_hash:, input:,
+      day:, opens_at:, closes_at:)
+    schedule_row = {}
+    schedule_row["weekday"] = day
+    schedule_row["opens_at"] = opens_at
+    schedule_row["closes_at"] = closes_at
+
+    foreign_key = schedule_hash["foreign_key_name"]
+    foreign_key_value = schedule_hash["foreign_key_value"]
+    schedule_row[foreign_key] = input[foreign_key_value]
+    schedule_data << schedule_row
+  end
+
   def write_collected_nested_structures
     write_csv(output_phones_path, PHONE_HEADERS, phone_data)
     write_csv(output_addresses_path, ADDRESS_HEADERS, address_data)
+    write_csv(output_schedules_path, SCHEDULE_HEADERS, schedule_data)
   end
 
   def parse_mapping(mapping_path)
