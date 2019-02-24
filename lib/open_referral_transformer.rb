@@ -84,44 +84,51 @@ class OpenReferralTransformer
 
   def formatNumber(phone_number)
     formatted_number = ""
-    
+
+    index = 0
+    phone_index = 0
+    until index == 14
+      if index == 0
+        formatted_number += '('
+      elsif index == 4
+        formatted_number += ')'
+      elsif index == 5
+        formatted_number += ' '
+      elsif index == 9
+        formatted_number += '-'
+      else
+        formatted_number += phone_number.slice(phone_index)
+        phone_index += 1
+      end
+      index += 1
+    end
+    formatted_number
+  end
 
   def collect_phone_data(phone_key:, phone_hash:, input:)
     key = phone_hash["field"]
     phone_row = {}
     whole_number = input[phone_key]
+    whole_number_arr = whole_number.split('')
 
     return unless whole_number
 
     cell_number = ""
     extension_number = ""
 
-    whole_number.each { |x|
+    whole_number_arr.each do |x|
       if numeric?(x) != nil
         if cell_number.length != 10
-          cell_number += x
+          cell_number += x.to_s
         else
-          extension_number += x    
-    }
+          extension_number += x.to_s
+        end
+      end
+    end
 
-    
-
-    phone_row[key] = cell_number
+    phone_row[key] = formatNumber(cell_number)
     if extension_number.length > 0
       phone_row["extension"] = extension_number
-    
-
-    number_array = []
-    if whole_number.include? "x"
-      number_array = whole_number.split("x")
-      phone_row[key] = number_array[0].strip
-      phone_row["extension"] = number_array[1].strip
-    elsif whole_number.include? "ext."
-      number_array = whole_number.split("ext.")
-      phone_row[key] = number_array[0].strip
-      phone_row["extension"] = number_array[1].strip
-    else
-      phone_row[key] = whole_number
     end
 
     foreign_key = phone_hash["foreign_key_name"]
