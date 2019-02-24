@@ -2,6 +2,23 @@ require "dotenv/load"
 require "csv"
 require "yaml"
 require "pry"
+require "sinatra"
+
+
+get '/' do
+  'Hello world!'
+end
+
+
+uri = URI.parse("http://localhost:4567")
+
+http = Net::HTTP.new(uri.host, uri.port)
+request = Net::HTTP::Post.new("/v1.1/auth")
+# request.add_field('Content-Type', 'application/json')
+# request.body = {'credentials' => ''}
+response = http.request(request)
+
+
 
 class OpenReferralTransformer
   ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
