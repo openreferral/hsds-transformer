@@ -2,6 +2,8 @@ require "dotenv/load"
 require "csv"
 require "yaml"
 require "pry"
+require "zip"
+require "zip/zip"
 
 class OpenReferralTransformer
   ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
@@ -197,7 +199,10 @@ class OpenReferralTransformer
   end
 
   def parse_mapping(mapping_path)
+    # uri = URI(mapping_path)
+    # file = Net::HTTP.get(uri)
     YAML.load File.read(mapping_path)
+    #YAML.load file
   end
 
   def write_csv(path, headers, data)

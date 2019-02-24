@@ -49,6 +49,14 @@ OpenReferralTransformer.run(organizations: "path/to/organizations.csv", location
 ```
 6. Now check the `tmp` directory for your newly created HSDS files!
 
+### Using the API
+Make a POST request with params: locations, organizations, services, mapping. Each of thse should contain a path to a CSV file and a mapping file (for mapping).
+
+E.g.
+```
+curl -X POST -F "locations=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/locations.csv" -F "organizations=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/organizations.csv" -F "services=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/services.csv" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
+```
+
 ## Related Projects
 
 Open Referral Playground App
