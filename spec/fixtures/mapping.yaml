@@ -29,9 +29,9 @@ organizations:
     model: postal_address
     field: address_1
     foreign_key_name: organization_id
-    foreign_key_value: Organization ID   
+    foreign_key_value: Organization ID
 locations:
-  Location_id: 
+  Location_id:
     model: locations
     field: id
     required: true
@@ -39,13 +39,18 @@ locations:
     model: locations
     field: name
   Organization ID:
-    model: locations 
+    model: locations
     field: organization_id
   Phone number:
     model: phones
     field: number
     foreign_key_name: location_id
     foreign_key_value: Location_id
+  Income standard for eligibility:
+    model: eligibilities
+    field: eligibility
+    foreign_key_name: service_id
+    foreign_key_value: Services
 services:
   Services-ID:
     model: services

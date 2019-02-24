@@ -45,6 +45,25 @@ describe OpenReferralTransformer do
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/addresses.csv"
       expect(output_file).to eq(fixture)
     end
+
+    it "creates eligibility records for eligibility data mapped in input csv" do
+      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+      organizations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/organizations.csv"
+      services_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/services.csv"
+      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+      transformer = OpenReferralTransformer.new(
+        locations: locations_file_path,
+        organizations: organizations_file_path,
+        services: services_file_path,
+        mapping: mapping_path
+      )
+
+      transformer.transform
+
+      output_file = CSV.read transformer.output_eligibility_path
+      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/eligibility.csv"
+      expect(output_file).to eq(fixture)
+    end
   end
 
   describe "#transform_organizations" do

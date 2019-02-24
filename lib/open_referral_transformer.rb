@@ -10,11 +10,13 @@ class OpenReferralTransformer
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY);
+  ELIGIBILITY_HEADERS = %w(id service_id eligibility)
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
-              :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path
+              :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path,
+              :eligibility_path, :output_eligibility_path
 
-  attr_accessor :phone_data, :address_data
+  attr_accessor :phone_data, :address_data, :eligibility_data
 
   def self.run(args)
     new(args).transform
@@ -29,17 +31,20 @@ class OpenReferralTransformer
     @output_locations_path = "#{ENV["ROOT_PATH"]}/tmp/locations.csv"
     @output_services_path = "#{ENV["ROOT_PATH"]}/tmp/services.csv"
     @output_phones_path = "#{ENV["ROOT_PATH"]}/tmp/phones.csv"
-    @phone_data = []
-
     @output_addresses_path = "#{ENV["ROOT_PATH"]}/tmp/addresses.csv"
+    @output_eligibility_path = "#{ENV["ROOT_PATH"]}/tmp/eligibility.csv"
+
+    @phone_data = []
     @address_data = []
-    
+    @eligibility_data = []
+
   end
 
   def transform
     transform_each("organizations", organizations_path) if organizations_path
     transform_each("locations", locations_path) if locations_path
     transform_each("services", services_path) if services_path
+    transform_each("eligibility", eligibility_path) if eligibility_path
 
     write_collected_nested_structures
 
@@ -65,6 +70,8 @@ class OpenReferralTransformer
           collect_phone_data(phone_key: k, phone_hash: v, input: input)
         elsif v["model"] == "postal_address"
           collect_address_data(address_key: k, address_hash: v, input: input)
+        elsif v["model"] == "eligibilities"
+          collect_eligibility_data(eligibility_key: k, eligibility_hash: v, input: input)
         end
       end
       if valid
@@ -75,7 +82,7 @@ class OpenReferralTransformer
     write_csv(output_organizations_path, ORGANIZATION_HEADERS, org_data)
   end
 
-  
+
   private
 
   def collect_phone_data(phone_key:, phone_hash:, input:)
@@ -89,6 +96,18 @@ class OpenReferralTransformer
     phone_data << phone_row
   end
 
+  def collect_eligibility_data(eligibility_key:, eligibility_hash:, input:)
+    key = eligibility_hash["field"]
+    eligibility_row = {}
+    eligibility = input[eligibility_key]
+
+    foreign_key = eligibility_hash["foreign_key_name"]
+    foreign_key_value = eligibility_hash["foreign_key_value"]
+    eligibility_row[foreign_key] = input[foreign_key_value]
+
+    eligibility_data << eligibility_row
+  end
+
   def collect_address_data(address_key:, address_hash:, input:)
     key = address_hash["field"]
     address_row = {}
@@ -97,14 +116,14 @@ class OpenReferralTransformer
     postal_code = postal_code.match(/\d{5}/)
     if (postal_code != "")
       address_row["postal_code"] = postal_code
-      address = address[0..-7] 
+      address = address[0..-7]
     end
-       
+
     state = address.split(//).last(2).join.upcase
     if STATE_ABBREVIATIONS.include?(state)
       address_row["state_province"] = state
       address = address[0..-5]
-    end  
+    end
     address_row[key] = address
 
     foreign_key = address_hash["foreign_key_name"]
@@ -116,6 +135,7 @@ class OpenReferralTransformer
   def write_collected_nested_structures
     write_csv(output_phones_path, PHONE_HEADERS, phone_data)
     write_csv(output_addresses_path, ADDRESS_HEADERS, address_data)
+    write_csv(output_eligibility_path, ELIGIBILITY_HEADERS, eligibility_data)
   end
 
   def parse_mapping(mapping_path)
