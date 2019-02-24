@@ -57,9 +57,9 @@ class OpenReferralTransformer
   end
 
   def transform
-    transform_each("organizations", organizations_path) if organizations_path
-    transform_each("locations", locations_path) if locations_path
-    transform_each("services", services_path) if services_path
+    transform_each("organizations", organizations_path, output_organizations_path, ORGANIZATION_HEADERS) if organizations_path
+    transform_each("locations", locations_path, output_locations_path, LOCATION_HEADERS) if locations_path
+    transform_each("services", services_path, output_services_path, SERVICE_HEADERS) if services_path
 
     write_collected_nested_structures
 
@@ -68,7 +68,7 @@ class OpenReferralTransformer
     return self
   end
 
-  def transform_each(input_csv, path)
+  def transform_each(input_csv, path, output_path, headers)
     org_mapping = mapping[input_csv]
     org_data = CSV.foreach(path, headers: true).each_with_object([]) do |input, array|
       row = {}
@@ -82,7 +82,14 @@ class OpenReferralTransformer
         end
         if (v["model"] == input_csv)
           key = v["field"]
-          row[key] = input[k]
+          if v["append"]
+            row[key] = '' unless row[key]
+            if input[k] 
+              row[key] += input[k].to_s
+            end
+          else
+            row[key] = input[k]
+          end
         elsif v["model"] == "phones"
           collect_phone_data(phone_key: k, phone_hash: v, input: input)
         elsif v["model"] == "postal_address"
@@ -100,7 +107,7 @@ class OpenReferralTransformer
       end
     end
 
-    write_csv(output_organizations_path, ORGANIZATION_HEADERS, org_data)
+    write_csv(output_path, headers, org_data)
   end
 
   private
@@ -138,7 +145,7 @@ class OpenReferralTransformer
     foreign_key_value = address_hash["foreign_key_value"]
     address_row[foreign_key] = input[foreign_key_value]
     address_data << address_row
-  end
+  end 
 
   def process_regular_schedule_text(schedule_key:, schedule_hash:, input:)
     if input["Hours of operation"]
