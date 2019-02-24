@@ -11,6 +11,7 @@ class OpenReferralTransformer
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
   SCHEDULE_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
   SAL_HEADERS = %w(id service_id location_id description)
+  ELIGIBILITIES_HEADERS = %w(id service_id eligibility)
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
@@ -18,9 +19,9 @@ class OpenReferralTransformer
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path,
-              :output_schedules_path, :output_sal_path
+              :output_schedules_path, :output_sal_path, :output_eligibilities_path
 
-  attr_accessor :phone_data, :address_data, :schedule_data, :sal_data
+  attr_accessor :phone_data, :address_data, :schedule_data, :sal_data, :eligibilities_data
 
   def self.run(args)
     new(args).transform
@@ -41,11 +42,13 @@ class OpenReferralTransformer
     @output_addresses_path = @output_dir + "/addresses.csv"
     @output_schedules_path = @output_dir + "/schedules.csv"
     @output_sal_path = @output_dir + "/service_at_location.csv"
+    @output_eligibilities_path = @output_dir + '/eligibilities.csv'
 
     @phone_data = []
     @address_data = []
     @schedule_data = []
     @sal_data = []
+    @eligibilities_data = []
   end
 
   def transform
@@ -81,6 +84,8 @@ class OpenReferralTransformer
           process_regular_schedule_text(schedule_key: k, schedule_hash: v, input: input)
         elsif v["model"] == "service_at_locations"
           collect_sal_data(sal_key: k, sal_hash: v, input: input)
+        elsif v["model"] == "eligibilities"
+          collect_eligibilities_data(eli_key: k, eli_hash: v, input: input)
         end
       end
       if valid
@@ -172,11 +177,23 @@ class OpenReferralTransformer
     sal_data << sal_row
   end
 
+  def collect_eligibilities_data(eli_key:, eli_hash:, input:)
+    key = eli_hash["field"]
+    eli_row = {}
+    eli_row[key] = input[eli_key]
+
+    foreign_key = eli_hash["foreign_key_name"]
+    foreign_key_value = eli_hash["foreign_key_value"]
+    eli_row[foreign_key] = input[foreign_key_value]
+    eligibilities_data << eli_row
+  end
+
   def write_collected_nested_structures
     write_csv(output_phones_path, PHONE_HEADERS, phone_data)
     write_csv(output_addresses_path, ADDRESS_HEADERS, address_data)
     write_csv(output_schedules_path, SCHEDULE_HEADERS, schedule_data)
     write_csv(output_sal_path, SAL_HEADERS, sal_data)
+    write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, eligibilities_data)
   end
 
   def parse_mapping(mapping_path)
