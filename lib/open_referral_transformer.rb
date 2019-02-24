@@ -10,6 +10,7 @@ class OpenReferralTransformer
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY);
+  OUTPUT_DIRECTORY_PATH = "#{ENV["ROOT_PATH"]}/tmp"
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path
@@ -25,15 +26,16 @@ class OpenReferralTransformer
     @organizations_path = args[:organizations]
     @locations_path = args[:locations]
     @services_path = args[:services]
-    @output_organizations_path = "#{ENV["ROOT_PATH"]}/tmp/organizations.csv"
-    @output_locations_path = "#{ENV["ROOT_PATH"]}/tmp/locations.csv"
-    @output_services_path = "#{ENV["ROOT_PATH"]}/tmp/services.csv"
-    @output_phones_path = "#{ENV["ROOT_PATH"]}/tmp/phones.csv"
-    @phone_data = []
+    @output_dir = args[:output_dir]
 
+    @output_organizations_path = @output_dir + "/organizations.csv"
+    @output_locations_path = @output_dir + "/locations.csv"
+    @output_services_path = @output_dir + "/services.csv"
+    @output_phones_path = @output_dir + "/phones.csv"
     @output_addresses_path = "#{ENV["ROOT_PATH"]}/tmp/addresses.csv"
+
+    @phone_data = []
     @address_data = []
-    
   end
 
   def transform
