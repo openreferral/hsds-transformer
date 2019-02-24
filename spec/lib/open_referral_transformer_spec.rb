@@ -1,7 +1,7 @@
 require "spec_helper"
 require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
 
-OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::OUTPUT_DIRECTORY_PATH
+OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::DEFAULT_OUTPUT_DIR
 
 describe OpenReferralTransformer do
 

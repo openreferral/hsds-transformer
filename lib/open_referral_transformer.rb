@@ -32,7 +32,7 @@ class OpenReferralTransformer
     @output_locations_path = @output_dir + "/locations.csv"
     @output_services_path = @output_dir + "/services.csv"
     @output_phones_path = @output_dir + "/phones.csv"
-    @output_addresses_path = @output_dir + "addresses.csv"
+    @output_addresses_path = @output_dir + "/addresses.csv"
 
     @phone_data = []
     @address_data = []
