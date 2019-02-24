@@ -9,7 +9,7 @@ class OpenReferralTransformer
   SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
-   
+  STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY);
 
   attr_reader :organizations_path, :output_organizations_path, :locations_path, :output_locations_path,
               :services_path, :output_services_path, :mapping, :output_phones_path, :output_addresses_path
@@ -97,8 +97,14 @@ class OpenReferralTransformer
     postal_code = postal_code.match(/\d{5}/)
     if (postal_code != "")
       address_row["postal_code"] = postal_code
+      address = address[0..-7] 
     end
-    address = address[0..-7] 
+       
+    state = address.split(//).last(2).join.upcase
+    if STATE_ABBREVIATIONS.include?(state)
+      address_row["state_province"] = state
+      address = address[0..-5]
+    end  
     address_row[key] = address
 
     foreign_key = address_hash["foreign_key_name"]
