@@ -30,6 +30,9 @@ class OpenReferralTransformer
     new(args).transform
   end
 
+
+  # Should validate that incoming data is valid-ish, like unique IDs
+
   def initialize(args)
     @mapping = parse_mapping(args[:mapping])
     @organizations_path = args[:organizations]
