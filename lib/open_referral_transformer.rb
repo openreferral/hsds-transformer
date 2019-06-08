@@ -49,65 +49,111 @@ class OpenReferralTransformer
 
     @valid = true
 
-    @phone_data = []
-    @address_data = []
-    @schedule_data = []
-    @sal_data = []
-    @eligibilities_data = []
+    @phones = []
+    @addresses = []
+    @schedules = []
+    @service_at_locations = []
+    @eligibilities = []
+    @organizations = []
+    @locations = []
+    @services = []
   end
 
   def transform
-    transform_each("organizations", organizations_path, output_organizations_path, ORGANIZATION_HEADERS) if organizations_path
-    transform_each("locations", locations_path, output_locations_path, LOCATION_HEADERS) if locations_path
-    transform_each("services", services_path, output_services_path, SERVICE_HEADERS) if services_path
+    # TODO take each toplevel array item from yaml file and convert those
+    transform_each("organizations", organizations_path) if organizations_path
+    # transform_each("locations", locations_path, output_locations_path, LOCATION_HEADERS) if locations_path
+    # transform_each("services", services_path, output_services_path, SERVICE_HEADERS) if services_path
 
-    write_collected_nested_structures
+    # write_collected_nested_structures
 
-    validate_output
+    write_csv(output_organizations_path, ORGANIZATION_HEADERS, @organizations)
+    write_csv(output_services_path, SERVICE_HEADERS, @services)
+    write_csv(output_locations_path, LOCATION_HEADERS, @locations)
+    write_csv(output_phones_path, PHONE_HEADERS, @phones)
+    write_csv(output_addresses_path, ADDRESS_HEADERS, @addresses)
+    write_csv(output_schedules_path, SCHEDULE_HEADERS, @schedules)
+    write_csv(output_sal_path, SAL_HEADERS, @service_at_locations)
+    write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, @eligibilities)
+
+    # validate_output
 
     return self
   end
 
-  def transform_each(input_csv, path, output_path, headers)
+  def transform_each(input_csv, path)
     org_mapping = mapping[input_csv]
-    org_data = CSV.foreach(path, headers: true).each_with_object([]) do |input, array|
-      row = {}
-      valid = true
-      org_mapping.each do |k, v|
-        if v["required"] == true
-          if input[k].nil?
-            valid = false
-            break
-          end
+
+
+    CSV.foreach(path, headers: true) do |input|
+      # Now we want to process each row in a way that allows the row to create multiple objects, including multiple objects from the same rows
+      # binding.pry
+      collected_data = {}
+
+      input.each do |k,v|
+        # k is the input field_name
+        # org_mapping[k] gives us the array of output fields
+        # turn this into array to be backwards compatible
+        output_fields = org_mapping[k].is_a?(Array) ? org_mapping[k] : [org_mapping[k]]
+
+
+        # now lets collect each object
+        output_fields.compact.each do |output_field|
+
+          # collected_data[output_field["model"]] should make it such that collected_data = { "organizations" => {} }
+          collected_data[output_field["model"]] ||= {}
+          # binding.pry
+          collected_data[output_field["model"]].merge!(output_field["field"] => v)
         end
-        if (v["model"] == input_csv)
-          key = v["field"]
-          if v["append"]
-            row[key] = '' unless row[key]
-            if input[k] 
-              row[key] += input[k].to_s
-            end
-          else
-            row[key] = input[k]
-          end
-        elsif v["model"] == "phones"
-          collect_phone_data(phone_key: k, phone_hash: v, input: input)
-        elsif v["model"] == "postal_address"
-          collect_address_data(address_key: k, address_hash: v, input: input)
-        elsif v["model"] == "regular_schedule"
-          process_regular_schedule_text(schedule_key: k, schedule_hash: v, input: input)
-        elsif v["model"] == "service_at_locations"
-          collect_sal_data(sal_key: k, sal_hash: v, input: input)
-        elsif v["model"] == "eligibilities"
-          collect_eligibilities_data(eli_key: k, eli_hash: v, input: input)
-        end
+
       end
-      if valid
-        array << row
-      end
+      # now lets pop each object into its respective instance variable collection so it can be written to the right file
+      @organizations << collected_data["organizations"] if collected_data["organizations"]
+      @services << collected_data["services"] if collected_data["services"]
+      @locations << collected_data["locations"] if collected_data["locations"]
+      @addresses << collected_data["addresses"] if collected_data["addresses"]
+      @phones << collected_data["phones"] if collected_data["phones"]
+      @schedules << collected_data["schedules"] if collected_data["schedules"]
+      @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"]
     end
 
-    write_csv(output_path, headers, org_data)
+    #   row = {}
+    #   valid = true
+    #   org_mapping.each do |k, v|
+    #     if v["required"] == true
+    #       if input[k].nil?
+    #         valid = false
+    #         break
+    #       end
+    #     end
+    #     if (v["model"] == input_csv)
+    #       key = v["field"]
+    #       if v["append"]
+    #         row[key] = '' unless row[key]
+    #         if input[k]
+    #           row[key] += input[k].to_s
+    #         end
+    #       else
+    #         row[key] = input[k]
+    #       end
+    #     elsif v["model"] == "phones"
+    #       collect_phone_data(phone_key: k, phone_hash: v, input: input)
+    #     elsif v["model"] == "postal_address"
+    #       collect_address_data(address_key: k, address_hash: v, input: input)
+    #     elsif v["model"] == "regular_schedule"
+    #       process_regular_schedule_text(schedule_key: k, schedule_hash: v, input: input)
+    #     elsif v["model"] == "service_at_locations"
+    #       collect_sal_data(sal_key: k, sal_hash: v, input: input)
+    #     elsif v["model"] == "eligibilities"
+    #       collect_eligibilities_data(eli_key: k, eli_hash: v, input: input)
+    #     end
+    #   end
+    #   if valid
+    #     array << row
+    #   end
+    # end
+    #
+    # write_csv(output_path, headers, org_data)
   end
 
   private
@@ -218,10 +264,16 @@ class OpenReferralTransformer
   end
 
   def write_csv(path, headers, data)
+    return if data.empty?
     CSV.open(path, 'wb') do |csv|
       csv << headers
       data.each do |row|
-        csv << CSV::Row.new(row.keys, row.values).values_at(*headers)
+        if row.nil?
+          binding.pry
+        else
+          csv << CSV::Row.new(row.keys, row.values).values_at(*headers)
+        end
+
       end
     end
   end
