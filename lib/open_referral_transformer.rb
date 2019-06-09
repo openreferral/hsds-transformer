@@ -6,10 +6,11 @@ require "zip"
 require "zip/zip"
 require "rest_client"
 require_relative "headers"
+require_relative "miami_processing"
 
 class OpenReferralTransformer
   include Headers
-
+  include MiamiProcessing
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
@@ -73,7 +74,10 @@ class OpenReferralTransformer
     end
 
     format_languages
-    
+
+    remove_child_organizations
+    determine_services
+
     write_output_files
 
     # validate_output
