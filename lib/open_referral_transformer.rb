@@ -16,6 +16,7 @@ class OpenReferralTransformer
   SAL_HEADERS = %w(id service_id location_id description)
   ELIGIBILITIES_HEADERS = %w(id service_id eligibility)
   CONTACTS_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)
+  LANGUAGES_HEADERS = %w(id service_id location_id language)
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
@@ -24,7 +25,7 @@ class OpenReferralTransformer
 
   attr_reader :output_organizations_path, :output_locations_path, :output_services_path,
               :mapping, :output_phones_path, :output_addresses_path, :output_schedules_path,
-              :output_sal_path, :output_eligibilities_path, :output_contacts_path,
+              :output_sal_path, :output_eligibilities_path, :output_contacts_path, :output_languages_path,
               :valid, :input_dir, :output_dir,
               :include_custom, :generate_pkeys
 
@@ -55,6 +56,7 @@ class OpenReferralTransformer
     @output_sal_path = @output_dir + "/service_at_locations.csv"
     @output_eligibilities_path = @output_dir + "/eligibilities.csv"
     @output_contacts_path = @output_dir + "/contacts.csv"
+    @output_languages_path = @output_dir + "/languages.csv"
 
     @valid = true
 
@@ -67,6 +69,7 @@ class OpenReferralTransformer
     @locations = []
     @services = []
     @contacts = []
+    @languages = []
   end
 
   def transform
@@ -75,6 +78,7 @@ class OpenReferralTransformer
     end
 
     # write_collected_nested_structures
+    format_languages
 
     write_output_files
 
@@ -127,6 +131,7 @@ class OpenReferralTransformer
       @schedules << collected_data["schedules"] if collected_data["schedules"]
       @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"]
       @contacts << collected_data["contacts"] if collected_data["contacts"]
+      @languages << collected_data["languages"] if collected_data["languages"]
     end
 
       # org_mapping.each do |k, v|
@@ -157,6 +162,21 @@ class OpenReferralTransformer
     write_csv(output_sal_path, SAL_HEADERS, @service_at_locations)
     write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, @eligibilities)
     write_csv(output_contacts_path, CONTACTS_HEADERS, @contacts)
+    write_csv(output_languages_path, LANGUAGES_HEADERS, @languages)
+  end
+
+  def format_languages
+    formatted_langs = @languages.each_with_object([]) do |language_row, array|
+      langs = language_row["language"].split(",")
+      if langs.size > 1
+        langs.each do |lang|
+          array << language_row.clone.merge("language" => lang.strip)
+        end
+      else
+        array << language_row
+      end
+    end
+    @languages = formatted_langs
   end
 
   # def collect_phone_data(phone_key:, phone_hash:, input:)
