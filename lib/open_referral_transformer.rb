@@ -17,6 +17,8 @@ class OpenReferralTransformer
   ELIGIBILITIES_HEADERS = %w(id service_id eligibility)
   CONTACTS_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)
   LANGUAGES_HEADERS = %w(id service_id location_id language)
+  ACCESSIBILITY_HEADERS = %w(id location_id accessibility details)
+
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
@@ -26,7 +28,7 @@ class OpenReferralTransformer
   attr_reader :output_organizations_path, :output_locations_path, :output_services_path,
               :mapping, :output_phones_path, :output_addresses_path, :output_schedules_path,
               :output_sal_path, :output_eligibilities_path, :output_contacts_path, :output_languages_path,
-              :valid, :input_dir, :output_dir,
+              :output_accessibility_path, :valid, :input_dir, :output_dir,
               :include_custom, :generate_pkeys
 
   def self.run(args)
@@ -57,6 +59,7 @@ class OpenReferralTransformer
     @output_eligibilities_path = @output_dir + "/eligibilities.csv"
     @output_contacts_path = @output_dir + "/contacts.csv"
     @output_languages_path = @output_dir + "/languages.csv"
+    @output_accessibility_path = @output_dir + "/accessibility_for_disabilities.csv"
 
     @valid = true
 
@@ -70,6 +73,7 @@ class OpenReferralTransformer
     @services = []
     @contacts = []
     @languages = []
+    @accessibility_for_disabilities = []
   end
 
   def transform
@@ -116,22 +120,28 @@ class OpenReferralTransformer
 
             collected_data[output_field["model"]].merge!(output_field["field"] => existing_string_value)
           else
-            collected_data[output_field["model"]].merge!(output_field["field"] => v)
+            if output_field["map"]
+              value = output_field["map"][v]
+            else
+              value = v
+            end
+            collected_data[output_field["model"]].merge!(output_field["field"] => value) unless value.nil?
           end
         end
       end
 
       # binding.pry
       # now lets pop each object into its respective instance variable collection so it can be written to the right file
-      @organizations << collected_data["organizations"] if collected_data["organizations"]
-      @services << collected_data["services"] if collected_data["services"]
-      @locations << collected_data["locations"] if collected_data["locations"]
-      @addresses << collected_data["addresses"] if collected_data["addresses"]
-      @phones << collected_data["phones"] if collected_data["phones"]
-      @schedules << collected_data["schedules"] if collected_data["schedules"]
-      @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"]
-      @contacts << collected_data["contacts"] if collected_data["contacts"]
-      @languages << collected_data["languages"] if collected_data["languages"]
+      @organizations << collected_data["organizations"] if collected_data["organizations"] && !collected_data["organizations"].empty?
+      @services << collected_data["services"] if collected_data["services"] && !collected_data["services"].empty?
+      @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
+      @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
+      @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
+      @schedules << collected_data["schedules"] if collected_data["schedules"] && !collected_data["schedules"].empty?
+      @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
+      @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
+      @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
+      @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
     end
 
       # org_mapping.each do |k, v|
@@ -163,6 +173,7 @@ class OpenReferralTransformer
     write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, @eligibilities)
     write_csv(output_contacts_path, CONTACTS_HEADERS, @contacts)
     write_csv(output_languages_path, LANGUAGES_HEADERS, @languages)
+    write_csv(output_accessibility_path, ACCESSIBILITY_HEADERS, @accessibility_for_disabilities)
   end
 
   def format_languages
