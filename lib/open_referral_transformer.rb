@@ -5,19 +5,10 @@ require "pry"
 require "zip"
 require "zip/zip"
 require "rest_client"
+require_relative "headers"
 
 class OpenReferralTransformer
-  ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
-  LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
-  SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
-  PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
-  ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
-  SCHEDULE_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
-  SAL_HEADERS = %w(id service_id location_id description)
-  ELIGIBILITIES_HEADERS = %w(id service_id eligibility)
-  CONTACTS_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)
-  LANGUAGES_HEADERS = %w(id service_id location_id language)
-  ACCESSIBILITY_HEADERS = %w(id location_id accessibility details)
+  include Headers
 
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
@@ -81,9 +72,8 @@ class OpenReferralTransformer
       transform_each(input_file_name, file_mapping)
     end
 
-    # write_collected_nested_structures
     format_languages
-
+    
     write_output_files
 
     # validate_output
@@ -130,18 +120,7 @@ class OpenReferralTransformer
         end
       end
 
-      # binding.pry
-      # now lets pop each object into its respective instance variable collection so it can be written to the right file
-      @organizations << collected_data["organizations"] if collected_data["organizations"] && !collected_data["organizations"].empty?
-      @services << collected_data["services"] if collected_data["services"] && !collected_data["services"].empty?
-      @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
-      @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
-      @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
-      @schedules << collected_data["schedules"] if collected_data["schedules"] && !collected_data["schedules"].empty?
-      @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
-      @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
-      @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
-      @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
+      collect_into_ivars(collected_data)
     end
 
       # org_mapping.each do |k, v|
@@ -163,17 +142,31 @@ class OpenReferralTransformer
   private
 
   def write_output_files
-    write_csv(output_organizations_path, ORGANIZATION_HEADERS, @organizations)
-    write_csv(output_services_path, SERVICE_HEADERS, @services)
-    write_csv(output_locations_path, LOCATION_HEADERS, @locations)
-    write_csv(output_phones_path, PHONE_HEADERS, @phones)
-    write_csv(output_addresses_path, ADDRESS_HEADERS, @addresses)
-    write_csv(output_schedules_path, SCHEDULE_HEADERS, @schedules)
-    write_csv(output_sal_path, SAL_HEADERS, @service_at_locations)
-    write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, @eligibilities)
-    write_csv(output_contacts_path, CONTACTS_HEADERS, @contacts)
-    write_csv(output_languages_path, LANGUAGES_HEADERS, @languages)
-    write_csv(output_accessibility_path, ACCESSIBILITY_HEADERS, @accessibility_for_disabilities)
+    write_csv(output_organizations_path, headers(@organizations.first, "organization"), @organizations)
+    write_csv(output_services_path, headers(@services.first, "service"), @services)
+    write_csv(output_locations_path, headers(@locations.first, "location"), @locations)
+    write_csv(output_phones_path, headers(@phones.first, "phone"), @phones)
+    write_csv(output_addresses_path, headers(@addresses.first, "address"), @addresses)
+    write_csv(output_schedules_path, headers(@schedules.first, "schedule"), @schedules)
+    write_csv(output_sal_path, headers(@service_at_locations.first, "sal"), @service_at_locations)
+    write_csv(output_eligibilities_path, headers(@eligibilities.first, "eligibility"), @eligibilities)
+    write_csv(output_contacts_path, headers(@contacts.first, "contact"), @contacts)
+    write_csv(output_languages_path, headers(@languages.first, "language"), @languages)
+    write_csv(output_accessibility_path, headers(@accessibility_for_disabilities.first, "accessibility"), @accessibility_for_disabilities)
+  end
+
+  # now lets pop each object into its respective instance variable collection so it can be written to the right file
+  def collect_into_ivars(collected_data)
+    @organizations << collected_data["organizations"] if collected_data["organizations"] && !collected_data["organizations"].empty?
+    @services << collected_data["services"] if collected_data["services"] && !collected_data["services"].empty?
+    @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
+    @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
+    @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
+    @schedules << collected_data["schedules"] if collected_data["schedules"] && !collected_data["schedules"].empty?
+    @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
+    @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
+    @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
+    @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
   end
 
   def format_languages
@@ -278,14 +271,6 @@ class OpenReferralTransformer
     foreign_key_value = eli_hash["foreign_key_value"]
     eli_row[foreign_key] = input[foreign_key_value]
     eligibilities_data << eli_row
-  end
-
-  def write_collected_nested_structures
-    write_csv(output_phones_path, PHONE_HEADERS, phone_data)
-    write_csv(output_addresses_path, ADDRESS_HEADERS, address_data)
-    write_csv(output_schedules_path, SCHEDULE_HEADERS, schedule_data)
-    write_csv(output_sal_path, SAL_HEADERS, sal_data)
-    write_csv(output_eligibilities_path, ELIGIBILITIES_HEADERS, eligibilities_data)
   end
 
   def parse_mapping(mapping_path)
