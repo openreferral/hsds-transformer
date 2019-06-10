@@ -10,6 +10,8 @@ module Headers
   CONTACT_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)
   LANGUAGE_HEADERS = %w(id service_id location_id language)
   ACCESSIBILITY_HEADERS = %w(id location_id accessibility details)
+  TAXONOMY_HEADERS = %w(id name parent_id parent_name vocabulary)
+  SERVICE_TAXONOMY_HEADERS = %w(id service_id taxonomy_id taxonomy_detail)
 
   def headers(row, model)
     const_name = "Headers::" + model.upcase + "_HEADERS"

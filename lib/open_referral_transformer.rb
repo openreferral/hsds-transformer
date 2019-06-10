@@ -20,8 +20,8 @@ class OpenReferralTransformer
   attr_reader :output_organizations_path, :output_locations_path, :output_services_path,
               :mapping, :output_phones_path, :output_addresses_path, :output_schedules_path,
               :output_sal_path, :output_eligibilities_path, :output_contacts_path, :output_languages_path,
-              :output_accessibility_path, :valid, :input_dir, :output_dir,
-              :include_custom, :generate_pkeys
+              :output_accessibility_path, :output_taxonomy_path, :output_service_taxonomy_path,
+              :valid, :input_dir, :output_dir, :include_custom
 
   def self.run(args)
     new(args).transform
@@ -37,28 +37,27 @@ class OpenReferralTransformer
     # "include_custom" indicates that the final output CSVs should include the non-HSDS columns that the original input CSVs had
     @include_custom = args[:include_custom]
 
-    # "generate_pkeys" indicates that primary keys for new rows should be generated in this script
-    @generate_pkeys
-
     # TODO DRY this up
     @output_organizations_path = @output_dir + "/organizations.csv"
     @output_locations_path = @output_dir + "/locations.csv"
     @output_services_path = @output_dir + "/services.csv"
     @output_phones_path = @output_dir + "/phones.csv"
-    @output_addresses_path = @output_dir + "/addresses.csv"
-    @output_schedules_path = @output_dir + "/schedules.csv"
-    @output_sal_path = @output_dir + "/service_at_locations.csv"
-    @output_eligibilities_path = @output_dir + "/eligibilities.csv"
+    @output_addresses_path = @output_dir + "/physical_addresses.csv" # only having physical addresses for now
+    @output_schedules_path = @output_dir + "/regular_schedules.csv" # only regular schedules for now
+    @output_sal_path = @output_dir + "/services_at_location.csv"
+    @output_eligibilities_path = @output_dir + "/eligibility.csv"
     @output_contacts_path = @output_dir + "/contacts.csv"
     @output_languages_path = @output_dir + "/languages.csv"
     @output_accessibility_path = @output_dir + "/accessibility_for_disabilities.csv"
+    @output_taxonomy_path = @output_dir + "/taxonomy.csv"
+    @output_service_taxonomy_path = @output_dir + "/services_taxonomy.csv"
 
     @valid = true
 
     @phones = []
     @addresses = []
     @schedules = []
-    @service_at_locations = []
+    @services_at_location = []
     @eligibilities = []
     @organizations = []
     @locations = []
@@ -66,6 +65,8 @@ class OpenReferralTransformer
     @contacts = []
     @languages = []
     @accessibility_for_disabilities = []
+    @taxonomies = []
+    @service_taxonomies = []
   end
 
   def transform
@@ -152,11 +153,13 @@ class OpenReferralTransformer
     write_csv(output_phones_path, headers(@phones.first, "phone"), @phones)
     write_csv(output_addresses_path, headers(@addresses.first, "address"), @addresses)
     write_csv(output_schedules_path, headers(@schedules.first, "schedule"), @schedules)
-    write_csv(output_sal_path, headers(@service_at_locations.first, "sal"), @service_at_locations)
+    write_csv(output_sal_path, headers(@services_at_location.first, "sal"), @services_at_location)
     write_csv(output_eligibilities_path, headers(@eligibilities.first, "eligibility"), @eligibilities)
     write_csv(output_contacts_path, headers(@contacts.first, "contact"), @contacts)
     write_csv(output_languages_path, headers(@languages.first, "language"), @languages)
     write_csv(output_accessibility_path, headers(@accessibility_for_disabilities.first, "accessibility"), @accessibility_for_disabilities)
+    write_csv(output_taxonomy_path, headers(@taxonomies.first, "taxonomy"), @taxonomies)
+    write_csv(output_service_taxonomy_path, headers(@service_taxonomies.first, "service_taxonomy"), @service_taxonomies)
   end
 
   # now lets pop each object into its respective instance variable collection so it can be written to the right file
@@ -167,10 +170,12 @@ class OpenReferralTransformer
     @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
     @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
     @schedules << collected_data["schedules"] if collected_data["schedules"] && !collected_data["schedules"].empty?
-    @service_at_locations << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
+    @services_at_location << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
     @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
     @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
     @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
+    @taxonomies << collected_data["taxonomies"] if collected_data["taxonomies"] && !collected_data["taxonomies"].empty?
+    @service_taxonomies << collected_data["service_taxonomies"] if collected_data["service_taxonomies"] && !collected_data["service_taxonomies"].empty?
   end
 
   def format_languages
