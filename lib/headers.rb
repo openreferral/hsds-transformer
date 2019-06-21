@@ -4,7 +4,7 @@ module Headers
   SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
   PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
   ADDRESS_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
-  SCHEDULE_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
+  REGULAR_SCHEDULE_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
   SAL_HEADERS = %w(id service_id location_id description)
   ELIGIBILITY_HEADERS = %w(id service_id eligibility)
   CONTACT_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)

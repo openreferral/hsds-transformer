@@ -18,8 +18,7 @@ class OpenReferralTransformer
   DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
   DEFAULT_INPUT_DIR = "#{ENV["ROOT_PATH"]}/"
 
-
-  attr_reader :mapping, :input_dir, :output_dir, :include_custom
+  attr_reader :mapping, :input_dir, :output_dir, :output_data_path, :include_custom
 
   def self.run(args)
     new(args).transform
@@ -30,6 +29,7 @@ class OpenReferralTransformer
     @mapping = parse_mapping(args[:mapping])
     @input_dir = args[:input_dir] || DEFAULT_INPUT_DIR
     @output_dir = args[:output_dir] || DEFAULT_OUTPUT_DIR
+    @output_data_path = @output_dir + "data"
 
     # "include_custom" indicates that the final output CSVs should include the non-HSDS columns that the original input CSVs had
     @include_custom = args[:include_custom]
@@ -37,7 +37,6 @@ class OpenReferralTransformer
     # All the HSDS models we currently support
     @phones = []
     @addresses = []
-    @schedules = []
     @services_at_location = []
     @eligibilities = []
     @organizations = []
@@ -48,6 +47,7 @@ class OpenReferralTransformer
     @accessibility_for_disabilities = []
     @taxonomies = []
     @service_taxonomies = []
+    @regular_schedules = []
 
     set_file_paths
   end
@@ -65,6 +65,10 @@ class OpenReferralTransformer
     # TODO make this customization more OOPy and extensible later
     remove_child_organizations
     determine_services
+    parse_regular_schedules_text
+
+    # make data dir for these files
+    Dir.mkdir(output_data_path) unless Dir.exists?(output_data_path)
 
     # Write the data to CSV files
     write_output_files
@@ -87,6 +91,7 @@ class OpenReferralTransformer
 
   private
 
+  # TODO remove NULL
   def hsds_objects_from_row(input, org_mapping)
     collected_data = {}
 
@@ -121,13 +126,13 @@ class OpenReferralTransformer
     collected_data
   end
 
+  # TODO dry this up
   def write_output_files
     write_csv(output_organizations_path, headers(@organizations.first, "organization"), @organizations)
     write_csv(output_services_path, headers(@services.first, "service"), @services)
     write_csv(output_locations_path, headers(@locations.first, "location"), @locations)
     write_csv(output_phones_path, headers(@phones.first, "phone"), @phones)
     write_csv(output_addresses_path, headers(@addresses.first, "address"), @addresses)
-    write_csv(output_schedules_path, headers(@schedules.first, "schedule"), @schedules)
     write_csv(output_sal_path, headers(@services_at_location.first, "sal"), @services_at_location)
     write_csv(output_eligibilities_path, headers(@eligibilities.first, "eligibility"), @eligibilities)
     write_csv(output_contacts_path, headers(@contacts.first, "contact"), @contacts)
@@ -135,8 +140,10 @@ class OpenReferralTransformer
     write_csv(output_accessibility_path, headers(@accessibility_for_disabilities.first, "accessibility"), @accessibility_for_disabilities)
     write_csv(output_taxonomy_path, headers(@taxonomies.first, "taxonomy"), @taxonomies)
     write_csv(output_service_taxonomy_path, headers(@service_taxonomies.first, "service_taxonomy"), @service_taxonomies)
+    write_csv(output_regular_schedules_path, headers(@regular_schedules.first, "regular_schedule"), @regular_schedules)
   end
 
+  # TODO dry this up
   # Now let's pop each object into its respective instance variable collection to be written to the right file
   def collect_into_ivars(collected_data)
     @organizations << collected_data["organizations"] if collected_data["organizations"] && !collected_data["organizations"].empty?
@@ -144,13 +151,13 @@ class OpenReferralTransformer
     @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
     @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
     @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
-    @schedules << collected_data["schedules"] if collected_data["schedules"] && !collected_data["schedules"].empty?
     @services_at_location << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
     @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
     @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
     @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
     @taxonomies << collected_data["taxonomies"] if collected_data["taxonomies"] && !collected_data["taxonomies"].empty?
     @service_taxonomies << collected_data["service_taxonomies"] if collected_data["service_taxonomies"] && !collected_data["service_taxonomies"].empty?
+    @regular_schedules << collected_data["regular_schedules"] if collected_data["regular_schedules"] && !collected_data["regular_schedules"].empty?
   end
 
   def singletonize_languages
