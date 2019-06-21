@@ -84,7 +84,7 @@ module MiamiProcessing
 
   def remove_child_organizations
     @organizations.reject! do |org|
-      org["parent_provider_id"] != "NULL"
+      org["parent_provider_id"] != ""
     end
 
     @organizations.each { |org| org.delete("parent_provider_id") }

@@ -110,7 +110,7 @@ class OpenReferralTransformer
         # Append all string fields marked as "append" to single output field
         if output_field["append"]
           existing_string_value = collected_data[output_field["model"]][output_field["field"]] || ""
-          existing_string_value += v.to_s if v
+          existing_string_value += v.to_s unless null_type(v)
 
           collected_data[output_field["model"]].merge!(output_field["field"] => existing_string_value)
         else
@@ -119,11 +119,16 @@ class OpenReferralTransformer
           else
             value = v
           end
-          collected_data[output_field["model"]].merge!(output_field["field"] => value) unless value.nil?
+          safe_val = null_type(value) ? "" : value
+          collected_data[output_field["model"]].merge!(output_field["field"] => safe_val)
         end
       end
     end
     collected_data
+  end
+
+  def null_type(string)
+    string.nil? || string.downcase.strip == "null"
   end
 
   # TODO dry this up
