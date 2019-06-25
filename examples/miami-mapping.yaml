@@ -1,0 +1,181 @@
+providers.csv:
+  columns:
+    provider_id:
+      - model: organizations
+        field: id
+      - model: locations
+        field: organization_id
+      - model: locations
+        field: id
+      - model: services
+        field: organization_id
+      - model: services
+        field: id
+      - model: service_at_locations
+        field: id
+      - model: service_at_locations
+        field: location_id
+      - model: service_at_locations
+        field: service_id
+      - model: phones
+        field: service_id
+      - model: phones
+        field: location_id
+      - model: phones
+        field: service_at_location_id
+      - model: phones
+        field: id
+      - model: contacts
+        field: id
+      - model: contacts
+        field: service_id
+      - model: contacts
+        field: service_at_location_id
+      - model: accessibility_for_disabilities
+        field: id
+      - model: accessibility_for_disabilities
+        field: location_id
+      - model: languages
+        field: id
+      - model: languages
+        field: location_id
+      - model: languages
+        field: service_id
+      - model: addresses
+        field: location_id
+      - model: regular_schedules
+        field: service_id
+    provider_name:
+      - model: organizations
+        field: name
+      - model: services
+        field: name
+      - model: locations
+        field: name
+    provider_aka:
+      - model: organizations
+        field: alternate_name
+      - model: services
+        field: alternate_name
+      - model: locations
+        field: alternate_name
+    provider_description:
+      - model: organizations
+        field: description
+      - model: services
+        field: description
+      - model: locations
+        field: description
+    website_address:
+      - model: organizations
+        field: url
+      - model: services
+        field: url
+    telephone_number:
+      - model: phones
+        field: number
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    line1:
+      - model: addresses
+        field: address_1
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    line2:
+      - model: addresses
+        field: address_2
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    city:
+      - model: addresses
+        field: city
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    province:
+      - model: addresses
+        field: state_province
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    postal_code:
+      - model: addresses
+        field: postal_code
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    country:
+      - model: addresses
+        field: country
+        foreign_key_name: organization_id
+        foreign_key_value: provider_id
+    Services:
+      - model: service_at_locations
+        field: service_id
+        foreign_key_name: location_id
+        foreign_key_value: Location_id
+    intake_procedure:
+      - model: services
+        field: application_process
+    eligibility:
+      - model: eligibilities
+        field: eligibility
+        foreign_key_name: service_id
+        foreign_key_value: Services
+    handicap_access:
+      - model: accessibility_for_disabilities
+        field: accessibility
+        map:
+          t: Handicap accessible
+    Latitude:
+      - model: locations
+        field: latitude
+    Longitude:
+      - model: locations
+        field: longitude
+    contact_email:
+      - model: contacts
+        field: email
+    contact_name:
+      - model: contacts
+        field: name
+    contact_title:
+      - model: contacts
+        field: title
+    languages:
+      - model: languages
+        field: language
+        split_by: ", "
+    parent_provider_id:
+      - model: organizations
+        field: parent_provider_id
+      - model: services
+        field: parent_provider_id
+    contact_phone:
+      - model: contacts
+        field: phone_number
+    contact_telephone_areacode:
+      - model: contacts
+        field: phone_areacode
+    contact_telephone_extension:
+      - model: contacts
+        field: phone_extension
+    hours:
+      - model: regular_schedules
+        field: original_text
+provider_taxonomy.csv:
+  columns:
+    provider_service_code_id:
+      - model: service_taxonomies
+        field: id
+    provider_id:
+      - model: service_taxonomies
+        field: service_id
+    taxonomy_code:
+      - model: taxonomies
+        field: id
+      - model: service_taxonomies
+        field: taxonomy_id
+    taxonomy_name:
+      - model: taxonomies
+        field: name
+    taxonomy_facet:
+      - model: taxonomies
+        field: taxonomy_facet

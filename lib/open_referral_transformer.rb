@@ -90,7 +90,6 @@ class OpenReferralTransformer
 
   private
 
-  # TODO remove NULL
   def hsds_objects_from_row(input, org_mapping)
     collected_data = {}
 
@@ -119,6 +118,7 @@ class OpenReferralTransformer
             value = v
           end
           safe_val = null_type(value) ? "" : value
+          # TODO provide default too
           collected_data[output_field["model"]].merge!(output_field["field"] => safe_val)
         end
       end
@@ -149,7 +149,7 @@ class OpenReferralTransformer
 
   def zip_output
     input_data_files = Dir.glob(File.join(output_data_path, '**/*'))
-    zipfile_name = File.join(output_dir, "datapackage.zip")
+
 
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       # Add databpackage.json

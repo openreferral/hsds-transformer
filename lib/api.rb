@@ -13,40 +13,24 @@ class Api < Sinatra::Base
   end
 
   post "/transform" do
-    locations_uri = params[:locations]
-    organizations_uri = params[:organizations]
-    services_uri = params[:services]
+    input_path = params[:input_path]
     mapping_uri = params[:mapping]
+    include_custom = params[:include_custom]
 
     if mapping_uri.nil?
       halt 422, "A mapping file is required."
     end
 
     transformer = OpenReferralTransformer.new(
-        locations: locations_uri,
-        organizations: organizations_uri,
-        services: services_uri,
-        mapping: mapping_uri)
+        input_path: input_path,
+        mapping: mapping_uri,
+        include_custom: include_custom,
+        zip_output: true,
+    )
 
     transformer.transform
 
-    directory = '\tmp'
-    zipfile_name = 'data.zip'
-
-    input_folder = "#{ENV["ROOT_PATH"]}/tmp"
-    input_filenames = Dir.glob(File.join(directory, '*')).map{|f| f[4..-1]}
-
-    if File.exist?(zipfile_name)
-      File.delete(zipfile_name)
-    end
-
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      input_filenames.each do |filename|
-        zipfile.add(filename, File.join(input_folder, filename))
-      end
-    end
-
-    send_file zipfile_name
+    send_file transformer.zipfile_name
   end
 end
 
