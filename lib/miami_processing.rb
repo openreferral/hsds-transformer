@@ -82,9 +82,9 @@ module MiamiProcessing
     [open, close]
   end
 
+  # Finds the time in strings like "Admin:\\n9:00am", "9am", "9:0a", "10:00pm"
   def clean_time(time)
-    # TODO match regex / remove non-numerical strings
-    # match 1-2 numbers, then colon, then two numbers and two letters (am/pm) -- OR 1-2 numbers plus 2 letters (e.g. "9am"). but also "9:0a". need to match on one number then anything until a letter
+    /\d{1,2}.*\z/.match(time).to_s
   end
 
   def new_sched_row(day, opt, sched_row)
