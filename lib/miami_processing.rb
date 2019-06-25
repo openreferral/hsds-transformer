@@ -1,7 +1,15 @@
 module MiamiProcessing
   WEEKDAYS = %w(Monday Tuesday Wednesday Thursday Friday)
   ALL_DAYS = %w(Monday Tuesday Wednesday Thursday Friday Saturday Sunday)
-  DAY_ABBRVS = %w(mon tue wed thu fri sat sun)
+  DAY_MAPPING = {
+    "mon" => "Monday",
+    "tue" => "Tuesday",
+    "wed" => "Wednesday",
+    "thu" => "Thursday",
+    "fri" => "Friday",
+    "sat" => "Saturday",
+    "sun" => "Sunday",
+  }
 
   def determine_services
     new_services = @services.each do |service|
@@ -10,7 +18,7 @@ module MiamiProcessing
       service.merge!("name" => formatted_name)
 
       # Set the org ID as the parent provider id
-      if service["parent_provider_id"] != "NULL"
+      if service["parent_provider_id"] != ""
         service.merge!("organization_id" => service["parent_provider_id"])
       end
       service.delete "parent_provider_id"
@@ -24,7 +32,7 @@ module MiamiProcessing
   # TODO add IDs
   def parse_regular_schedules_text
     new_schedules = @regular_schedules.each_with_object([]) do |sched_row, new_sheds|
-      # Schedule times and tidbits are separated by a newline
+      # Schedule times and tidbits are mostly separated by a newline
       sched_options = sched_row["original_text"].split("\n")
 
       sched_options.each do |opt|
@@ -60,7 +68,7 @@ module MiamiProcessing
   end
 
   def single_days(days)
-    days & DAY_ABBRVS
+    DAY_MAPPING.select{ |day| days.include? day }.values
   end
 
   def hours(opt)
@@ -68,7 +76,15 @@ module MiamiProcessing
     times = range.split("-")
     return unless times.size == 2
 
-    [times[0], times[1]]
+    open = clean_time(times[0])
+    close = clean_time(times[1])
+
+    [open, close]
+  end
+
+  def clean_time(time)
+    # TODO match regex / remove non-numerical strings
+    # match 1-2 numbers, then colon, then two numbers and two letters (am/pm) -- OR 1-2 numbers plus 2 letters (e.g. "9am"). but also "9:0a". need to match on one number then anything until a letter
   end
 
   def new_sched_row(day, opt, sched_row)
