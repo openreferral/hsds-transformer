@@ -15,10 +15,8 @@ class OpenReferralTransformer
   include MiamiProcessing
 
   STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
-  DEFAULT_OUTPUT_DIR = "#{ENV["ROOT_PATH"]}/tmp"
-  DEFAULT_INPUT_DIR = "#{ENV["ROOT_PATH"]}/"
 
-  attr_reader :mapping, :input_dir, :output_dir, :output_data_path, :include_custom
+  attr_reader :mapping, :include_custom
 
   def self.run(args)
     new(args).transform
@@ -27,12 +25,10 @@ class OpenReferralTransformer
   # TODO validate that incoming data is valid-ish, like unique IDs
   def initialize(args)
     @mapping = parse_mapping(args[:mapping])
-    @input_dir = args[:input_dir] || DEFAULT_INPUT_DIR
-    @output_dir = args[:output_dir] || DEFAULT_OUTPUT_DIR
-    @output_data_path = @output_dir + "data"
 
     # "include_custom" indicates that the final output CSVs should include the non-HSDS columns that the original input CSVs had
     @include_custom = args[:include_custom]
+    @zip_output = args[:zip_output]
 
     # All the HSDS models we currently support
     @phones = []
@@ -49,7 +45,7 @@ class OpenReferralTransformer
     @service_taxonomies = []
     @regular_schedules = []
 
-    set_file_paths
+    set_file_paths(args)
   end
 
   def transform
@@ -68,10 +64,13 @@ class OpenReferralTransformer
     parse_regular_schedules_text
 
     # make data dir for these files
+    Dir.mkdir(output_datapackage_path) unless Dir.exists?(output_datapackage_path)
     Dir.mkdir(output_data_path) unless Dir.exists?(output_data_path)
 
     # Write the data to CSV files
     write_output_files
+
+    zip_output if @zip_output
 
     return self
   end
@@ -146,6 +145,22 @@ class OpenReferralTransformer
     write_csv(output_taxonomy_path, headers(@taxonomies.first, "taxonomy"), @taxonomies)
     write_csv(output_service_taxonomy_path, headers(@service_taxonomies.first, "service_taxonomy"), @service_taxonomies)
     write_csv(output_regular_schedules_path, headers(@regular_schedules.first, "regular_schedule"), @regular_schedules)
+  end
+
+  def zip_output
+    input_data_files = Dir.glob(File.join(output_data_path, '**/*'))
+    zipfile_name = File.join(output_dir, "datapackage.zip")
+
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      # Add databpackage.json
+      zipfile.add("datapackage.json", datapackage_json_path)
+
+      # Add data files
+      input_data_files.each do |file_path|
+        zipped_name = "data/" + File.basename(file_path)
+        zipfile.add(zipped_name, file_path)
+      end
+    end
   end
 
   # TODO dry this up
