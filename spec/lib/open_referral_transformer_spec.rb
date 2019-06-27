@@ -16,14 +16,10 @@ describe OpenReferralTransformer do
 
   describe "#transform" do
     it "creates phone records for phone numbers mapped in input csv" do
-      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
-      organizations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/organizations.csv"
-      services_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/services.csv"
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(
-        locations: locations_file_path,
-        organizations: organizations_file_path,
-        services: services_file_path,
+        input_dir: input_dir,
         mapping: mapping_path
       )
 
@@ -33,16 +29,13 @@ describe OpenReferralTransformer do
       expect(output_file).to eq(fixture)
     end
 
-    it "creates address records for address numbers mapped in input csv" do
-      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
-      organizations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/organizations.csv"
-      services_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/services.csv"
+    # TODO add distinction between postel and physical addresses
+    xit "creates address records for address numbers mapped in input csv" do
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(
-        locations: locations_file_path,
-        organizations: organizations_file_path,
-        services: services_file_path,
-        mapping: mapping_path
+          input_dir: input_dir,
+          mapping: mapping_path
       )
 
       transformer.transform
@@ -52,17 +45,18 @@ describe OpenReferralTransformer do
       expect(output_file).to eq(fixture)
     end
 
-    it "creates schedule records for schedules mapped in input csv" do
-      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+    # TODO add parsing back with custom processing
+    xit "creates schedule records for schedules mapped in input csv" do
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer.new(
-        locations: locations_file_path,
-        mapping: mapping_path
+          input_dir: input_dir,
+          mapping: mapping_path
       )
 
       transformer.transform
 
-      output_file = CSV.read transformer.output_schedules_path
+      output_file = CSV.read transformer.output_regular_schedules_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/schedules.csv"
       expect(output_file).to eq(fixture)
     end
@@ -70,11 +64,14 @@ describe OpenReferralTransformer do
 
   describe "#transform_organizations" do
     it "converts an organizations file into valid HSDS organizations data" do
-      organizations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/organizations.csv"
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer.new(organizations: organizations_file_path, mapping: mapping_path)
+      transformer = OpenReferralTransformer.new(
+          input_dir: input_dir,
+          mapping: mapping_path
+      )
 
-      transformer.transform_each("organizations",organizations_file_path, transformer.output_organizations_path, ORGANIZATION_HEADERS)
+      transformer.transform
 
       output_file = CSV.read transformer.output_organizations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/organizations.csv"
@@ -84,11 +81,14 @@ describe OpenReferralTransformer do
 
   describe "#transform_locations" do
     it "converts a locations file into valid HSDS locations data" do
-      locations_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/locations.csv"
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer.new(locations: locations_file_path, mapping: mapping_path)
+      transformer = OpenReferralTransformer.new(
+          input_dir: input_dir,
+          mapping: mapping_path
+      )
 
-      transformer.transform_each("locations", locations_file_path, transformer.output_locations_path, LOCATION_HEADERS)
+      transformer.transform
 
       output_file = CSV.read transformer.output_locations_path
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/locations.csv"
@@ -97,14 +97,18 @@ describe OpenReferralTransformer do
   end
 
   describe "#transform_services" do
-    it "converts a services file into valid HSDS services data" do
-      services_file_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/services.csv"
+    # TODO implement required fields
+    xit "converts a services file into valid HSDS services data" do
+      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer.new(services: services_file_path, mapping: mapping_path)
+      transformer = OpenReferralTransformer.new(
+          input_dir: input_dir,
+          mapping: mapping_path
+      )
 
       output_file = CSV.read transformer.output_services_path
 
-      transformer.transform_each("services",services_file_path, transformer.output_services_path, SERVICE_HEADERS)
+      transformer.transform
       fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/services.csv"
       expect(output_file).to eq(fixture)
     end
