@@ -14,7 +14,7 @@ module MiamiProcessing
   def determine_services
     new_services = @services.each do |service|
       # Update the name to remove the org name
-      formatted_name = service["name"].split(" - ").last
+      formatted_name = service["name"].to_s.split(" - ").last
       service.merge!("name" => formatted_name)
 
       # Set the org ID as the parent provider id

@@ -117,7 +117,7 @@ class OpenReferralTransformer
           else
             value = v
           end
-          safe_val = null_type(value) ? "" : value
+          safe_val = null_type(value) ? nil : value
           # TODO provide default too
           collected_data[output_field["model"]].merge!(output_field["field"] => safe_val)
         end
@@ -171,7 +171,7 @@ class OpenReferralTransformer
     @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
     @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
     @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
-    @services_at_location << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["organizations"].empty?
+    @services_at_location << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["service_at_locations"].empty?
     @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
     @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
     @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
@@ -204,12 +204,13 @@ class OpenReferralTransformer
     end
   end
 
+  # This also dedupes data by calling `uniq` on each collection before writing
   def write_csv(path, headers, data)
     return if data.empty?
     CSV.open(path, 'wb') do |csv|
       csv << headers
-      data.each do |row|
-        csv << CSV::Row.new(row.keys, row.values).values_at(*headers)
+      data.uniq.each do |row|
+        csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all?(nil)
       end
     end
   end
