@@ -1,6 +1,6 @@
 module OpenReferralTransformer
   module Custom
-    class Open211MiamiTransformer < OpenReferralTransformer::Core
+    class IlaoTransformer < OpenReferralTransformer::Core
       def apply_custom_transformation
         # collect_address_data
         # process_regular_schedule_text
