@@ -19,6 +19,8 @@ module OpenReferralTransformer
         parse_regular_schedules_text
       end
 
+      private
+
       def determine_services
         new_services = @services.each do |service|
           # Update the name to remove the org name
@@ -41,7 +43,7 @@ module OpenReferralTransformer
       def parse_regular_schedules_text
         new_schedules = @regular_schedules.each_with_object([]) do |sched_row, new_sheds|
           # Schedule times and tidbits are mostly separated by a newline
-          sched_options = sched_row["original_text"].split("\n")
+          sched_options = sched_row["original_text"].to_s.split("\n")
 
           sched_options.each do |opt|
             opt_days = find_days(opt)
@@ -63,7 +65,7 @@ module OpenReferralTransformer
       end
 
       def find_days(opt_string)
-        strings = opt_string.split(", ")[1..-1].compact.flatten
+        strings = opt_string.to_s.split(", ")[1..-1].compact.flatten
         strings.map(&:downcase)
       end
 

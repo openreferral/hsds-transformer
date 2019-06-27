@@ -73,6 +73,11 @@ module OpenReferralTransformer
       end
     end
 
+
+    # # This is defined in custom transformer if there is one
+    # def apply_custom_transformation
+    # end
+
     private
 
     def hsds_objects_from_row(input, org_mapping)
@@ -167,7 +172,7 @@ module OpenReferralTransformer
 
     def singletonize_languages
       formatted_langs = @languages.each_with_object([]) do |language_row, array|
-        langs = language_row["language"].split(",")
+        langs = language_row["language"].to_s.split(",")
         if langs.size > 1
           langs.each do |lang|
             array << language_row.clone.merge("language" => lang.strip)
@@ -198,10 +203,6 @@ module OpenReferralTransformer
           csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all?(nil)
         end
       end
-    end
-
-    # This is defined in custom transformer if there is one
-    def apply_custom_transformation
     end
   end
 end
