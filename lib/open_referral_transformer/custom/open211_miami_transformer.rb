@@ -16,6 +16,7 @@ module OpenReferralTransformer
       remove_child_organizations
       determine_services
       parse_regular_schedules_text
+      add_default_taxonomy_vocabulary
     end
 
     private
@@ -113,6 +114,12 @@ module OpenReferralTransformer
       end
 
       @organizations.each { |org| org.delete("parent_provider_id") }
+    end
+
+    def add_default_taxonomy_vocabulary
+      @taxonomies.each do |tax_row|
+        tax_row.merge!("vocabulary" => "Open211 Miami - AIRS")
+      end
     end
   end
 end
