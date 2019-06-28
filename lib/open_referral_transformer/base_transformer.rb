@@ -5,6 +5,8 @@ module OpenReferralTransformer
 
     attr_reader :mapping, :include_custom
 
+    SUPPORTED_HSDS_MODELS = %w(organizations services locations addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_location)
+
     def self.run(args)
       new(args).transform
     end
@@ -16,20 +18,10 @@ module OpenReferralTransformer
       @include_custom = args[:include_custom]
       @zip_output = args[:zip_output]
 
-      # All the HSDS models we currently support
-      @phones = []
-      @addresses = []
-      @services_at_location = []
-      @eligibilities = []
-      @organizations = []
-      @locations = []
-      @services = []
-      @contacts = []
-      @languages = []
-      @accessibility_for_disabilities = []
-      @taxonomies = []
-      @service_taxonomies = []
-      @regular_schedules = []
+      SUPPORTED_HSDS_MODELS.each do |model|
+        var_name = "@" + model
+        instance_variable_set(var_name, [])
+      end
 
       set_file_paths(args)
     end
@@ -115,21 +107,37 @@ module OpenReferralTransformer
       string.nil? || string.downcase.strip == "null"
     end
 
-    # TODO dry this up
+    # Now let's pop each object into its respective instance variable collection to be written to the right file
+    def collect_into_ivars(collected_data)
+      SUPPORTED_HSDS_MODELS.each do |model|
+        collection_ivar(model) << collected_data[model] if collected_data[model] && !collected_data[model].empty?
+      end
+    end
+
+    def collection_ivar(model)
+      var_name = "@" + model
+      instance_variable_get(var_name)
+    end
+
+    def singletonize_languages
+      formatted_langs = @languages.each_with_object([]) do |language_row, array|
+        langs = language_row["language"].to_s.split(",")
+        if langs.size > 1
+          langs.each do |lang|
+            array << language_row.clone.merge("language" => lang.strip)
+          end
+        else
+          array << language_row
+        end
+      end
+      @languages = formatted_langs
+    end
+
     def write_output_files
-      write_csv(output_organizations_path, headers(@organizations.first, "organization"), @organizations)
-      write_csv(output_services_path, headers(@services.first, "service"), @services)
-      write_csv(output_locations_path, headers(@locations.first, "location"), @locations)
-      write_csv(output_phones_path, headers(@phones.first, "phone"), @phones)
-      write_csv(output_addresses_path, headers(@addresses.first, "address"), @addresses)
-      write_csv(output_sal_path, headers(@services_at_location.first, "sal"), @services_at_location)
-      write_csv(output_eligibilities_path, headers(@eligibilities.first, "eligibility"), @eligibilities)
-      write_csv(output_contacts_path, headers(@contacts.first, "contact"), @contacts)
-      write_csv(output_languages_path, headers(@languages.first, "language"), @languages)
-      write_csv(output_accessibility_path, headers(@accessibility_for_disabilities.first, "accessibility"), @accessibility_for_disabilities)
-      write_csv(output_taxonomy_path, headers(@taxonomies.first, "taxonomy"), @taxonomies)
-      write_csv(output_service_taxonomy_path, headers(@service_taxonomies.first, "service_taxonomy"), @service_taxonomies)
-      write_csv(output_regular_schedules_path, headers(@regular_schedules.first, "regular_schedule"), @regular_schedules)
+      SUPPORTED_HSDS_MODELS.each do |model|
+        path_var = instance_variable_get "@output_#{model}_path"
+        write_csv path_var, headers(collection_ivar(model).first, model), collection_ivar(model)
+      end
     end
 
     def zip_output
@@ -148,35 +156,15 @@ module OpenReferralTransformer
       end
     end
 
-    # TODO dry this up
-    # Now let's pop each object into its respective instance variable collection to be written to the right file
-    def collect_into_ivars(collected_data)
-      @organizations << collected_data["organizations"] if collected_data["organizations"] && !collected_data["organizations"].empty?
-      @services << collected_data["services"] if collected_data["services"] && !collected_data["services"].empty?
-      @locations << collected_data["locations"] if collected_data["locations"] && !collected_data["locations"].empty?
-      @addresses << collected_data["addresses"] if collected_data["addresses"] && !collected_data["addresses"].empty?
-      @phones << collected_data["phones"] if collected_data["phones"] && !collected_data["phones"].empty?
-      @services_at_location << collected_data["service_at_locations"] if collected_data["service_at_locations"] && !collected_data["service_at_locations"].empty?
-      @contacts << collected_data["contacts"] if collected_data["contacts"] && !collected_data["contacts"].empty?
-      @languages << collected_data["languages"] if collected_data["languages"] && !collected_data["languages"].empty?
-      @accessibility_for_disabilities << collected_data["accessibility_for_disabilities"] if collected_data["accessibility_for_disabilities"] && !collected_data["accessibility_for_disabilities"].empty?
-      @taxonomies << collected_data["taxonomies"] if collected_data["taxonomies"] && !collected_data["taxonomies"].empty?
-      @service_taxonomies << collected_data["service_taxonomies"] if collected_data["service_taxonomies"] && !collected_data["service_taxonomies"].empty?
-      @regular_schedules << collected_data["regular_schedules"] if collected_data["regular_schedules"] && !collected_data["regular_schedules"].empty?
-    end
-
-    def singletonize_languages
-      formatted_langs = @languages.each_with_object([]) do |language_row, array|
-        langs = language_row["language"].to_s.split(",")
-        if langs.size > 1
-          langs.each do |lang|
-            array << language_row.clone.merge("language" => lang.strip)
-          end
-        else
-          array << language_row
+    # This also dedupes data by calling `uniq` on each collection before writing
+    def write_csv(path, headers, data)
+      return if data.empty?
+      CSV.open(path, 'wb') do |csv|
+        csv << headers
+        data.uniq.each do |row|
+          csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all?(nil)
         end
       end
-      @languages = formatted_langs
     end
 
     def parse_mapping(mapping_path)
@@ -186,17 +174,6 @@ module OpenReferralTransformer
         YAML.load file
       else
         YAML.load File.read(mapping_path)
-      end
-    end
-
-    # This also dedupes data by calling `uniq` on each collection before writing
-    def write_csv(path, headers, data)
-      return if data.empty?
-      CSV.open(path, 'wb') do |csv|
-        csv << headers
-        data.uniq.each do |row|
-          csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all?(nil)
-        end
       end
     end
   end
