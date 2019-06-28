@@ -12,23 +12,24 @@ class Api < Sinatra::Base
     "Submit your data uri"
   end
 
+  # TODO catch the Exceptions and return error reponses
   post "/transform" do
     input_path = params[:input_path]
     mapping_uri = params[:mapping]
     include_custom = params[:include_custom]
+    custom_transformer = params[:custom_transformer]
 
     if mapping_uri.nil?
       halt 422, "A mapping file is required."
     end
 
-    transformer = OpenReferralTransformer.new(
-        input_path: input_path,
-        mapping: mapping_uri,
-        include_custom: include_custom,
-        zip_output: true,
+    transformer = OpenReferralTransformer::Runner.run(
+      input_path: input_path,
+      mapping: mapping_uri,
+      include_custom: include_custom,
+      zip_output: true,
+      custom_transformer: custom_transformer
     )
-
-    transformer.transform
 
     send_file transformer.zipfile_name
   end

@@ -8,7 +8,9 @@ require "rest_client"
 
 require_relative "open_referral_transformer/file_paths"
 require_relative "open_referral_transformer/headers"
-require_relative "open_referral_transformer/core"
+require_relative "open_referral_transformer/exceptions"
+require_relative "open_referral_transformer/runner"
+require_relative "open_referral_transformer/base_transformer"
 
 require_relative "open_referral_transformer/custom/open211_miami_transformer"
 require_relative "open_referral_transformer/custom/ilao_transformer"

@@ -1,5 +1,5 @@
 module OpenReferralTransformer
-  class Core
+  class BaseTransformer
     include OpenReferralTransformer::Headers
     include OpenReferralTransformer::FilePaths
 
@@ -74,9 +74,9 @@ module OpenReferralTransformer
     end
 
 
-    # # This is defined in custom transformer if there is one
-    # def apply_custom_transformation
-    # end
+    # This is defined in custom transformer if there is one
+    def apply_custom_transformation
+    end
 
     private
 

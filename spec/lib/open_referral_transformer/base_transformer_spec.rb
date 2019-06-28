@@ -8,7 +8,7 @@ PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_
 OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::FilePaths::DEFAULT_OUTPUT_DIR
 
 
-describe OpenReferralTransformer do
+describe OpenReferralTransformer::BaseTransformer do
 
   describe ".run" do
     xit "transforms a group of CSVs into valid datapackage.json and linked resources"
@@ -18,7 +18,7 @@ describe OpenReferralTransformer do
     it "creates phone records for phone numbers mapped in input csv" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
         input_dir: input_dir,
         mapping: mapping_path
       )
@@ -33,7 +33,7 @@ describe OpenReferralTransformer do
     xit "creates address records for address numbers mapped in input csv" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
           input_dir: input_dir,
           mapping: mapping_path
       )
@@ -49,7 +49,7 @@ describe OpenReferralTransformer do
     xit "creates schedule records for schedules mapped in input csv" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
           input_dir: input_dir,
           mapping: mapping_path
       )
@@ -66,7 +66,7 @@ describe OpenReferralTransformer do
     it "converts an organizations file into valid HSDS organizations data" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
           input_dir: input_dir,
           mapping: mapping_path
       )
@@ -83,7 +83,7 @@ describe OpenReferralTransformer do
     it "converts a locations file into valid HSDS locations data" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
           input_dir: input_dir,
           mapping: mapping_path
       )
@@ -101,7 +101,7 @@ describe OpenReferralTransformer do
     xit "converts a services file into valid HSDS services data" do
       input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::Core.new(
+      transformer = OpenReferralTransformer::BaseTransformer.new(
           input_dir: input_dir,
           mapping: mapping_path
       )
