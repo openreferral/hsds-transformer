@@ -61,7 +61,6 @@ module OpenReferralTransformer
       path = @input_dir + input_file_name
       org_mapping = file_mapping["columns"]
 
-
       # Now we want to process each row in a way that allows the row to create multiple objects,
       # including multiple objects from the same rows.
       CSV.foreach(path, headers: true) do |input|
@@ -105,7 +104,6 @@ module OpenReferralTransformer
               value = v
             end
             safe_val = null_type(value) ? nil : value
-            # TODO provide default too
             collected_data[output_field["model"]].merge!(output_field["field"] => safe_val)
           end
         end

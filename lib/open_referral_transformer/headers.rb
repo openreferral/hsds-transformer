@@ -20,7 +20,7 @@ module OpenReferralTransformer
       const = Object.const_get(const_name)
 
       if row && @include_custom
-        (row.keys + const).uniq
+        (const + row.keys).uniq
       else
         const
       end
