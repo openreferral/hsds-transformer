@@ -1,0 +1,131 @@
+organizations.csv:
+  columns:
+    Organization ID:
+      - model: organizations
+        field: id
+        required: true
+      - model: phones
+        field: organization_id
+      - model: postal_addresses
+        field: organization_id
+    Title:
+      model: organizations
+      field: name
+      required: true
+    Alternative name:
+      model: organizations
+      field: alternative_name
+    Body:
+      model: organizations
+      field: description
+      required: true
+    Email:
+      model: organizations
+      field: email
+    Website address:
+      model: organizations
+      field: url
+    Phone number:
+      model: phones
+      field: number
+    Mailing address:
+      model: postal_addresses
+      field: address_1
+    Mailing address city:
+      model: postal_addresses
+      field: city
+    Mailing address state:
+      model: postal_addresses
+      field: state_province
+    Mailing address zip:
+      model: postal_addresses
+      field: postal_code
+locations.csv:
+  columns:
+    Location_id:
+      - model: locations
+        field: id
+        required: true
+      - model: phones
+        field: location_id
+      - model: regular_schedules
+        field: location_id
+    Field 2:
+      model: locations
+      field: name
+    Organization ID:
+      model: locations
+      field: organization_id
+    Phone number:
+      model: phones
+      field: number
+    Hours of operation day:
+      - model: regular_schedules
+        field: weekday
+    Hours of operation open:
+      - model: regular_schedules
+        field: opens_at
+    Hours of operation close:
+      - model: regular_schedules
+        field: closes_at
+services.csv:
+  columns:
+    Services-ID:
+      - model: services
+        field: id
+        required: true
+      - model: phones
+        field: service_id
+      - model: services_at_location
+        field: service_id
+      - model: eligibilities
+        field: service_id
+    Title:
+      model: services
+      field: name
+      required: true
+    Service type:
+      model: services
+      field: description
+      required: true
+    Income eligibility and fees:
+      model: services
+      field: fees
+    Application process:
+      model: services
+      field: application_process
+    Website address:
+      model: services
+      field: url
+    Organization ID:
+      model: services
+      field: organization_id
+      required: true
+    Phone number:
+      model: phones
+      field: number
+    Process for applying by email:
+      model: services
+      field: application_process
+      append: true
+    Process for applying by phone:
+      model: services
+      field: application_process
+      append: true
+    Process for applying online:
+      model: services
+      field: application_process
+      append: true
+    Process for walk-ins:
+      model: services
+      field: application_process
+      append: true
+    Organization ID:
+      - model: services
+        field: organization_id
+    Location ID:
+      - model: services_at_location
+        field: location_id
+    Income standard for eligibility:
+      model: eligibilities
+      field: eligibility

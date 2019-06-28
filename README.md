@@ -38,6 +38,7 @@ If it's not, proceed.
 4. Install all the gems by running `bundle install`
 
 ### Transforming
+Here's how to transform the data if you're familiar with Ruby:
 
 1. Make sure your data is saved locally as CSVs in this directory.
 2. Create a mapping.yaml file and store it locally in this directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/open_referral_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
@@ -45,23 +46,50 @@ If it's not, proceed.
 4. Require the class: `require "./lib/open_referral_transformer"`
 5. Run the transformer: 
 ```
-OpenReferralTransformer.run(organizations: "path/to/organizations.csv", locations: "path/to/locations.csv", services: "path/to/services.csv", mapping: "path/to/mapping.yaml")
+OpenReferralTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
 ```
 6. Now check the `tmp` directory for your newly created HSDS files!
 
+You can also pass two additional arguments to the `.run` command: `include_custom` and `zip_output`. The output is by default not zipped, but if you want it to be, you can pass `true` as the value of this field. If your input data includes non-HSDS fields you want to see in the output files as well, you can pass `true` for `include_custom`.
+
 ### Using the API
+
 Start the API from the root of the project directory:
 
 `rackup -p 4567`
 
-Make a POST request with params as form data: locations, organizations, services, mapping. Each of these should contain a path to a CSV file and a mapping file (for mapping).
+Make a POST request with params: input_path, mapping, include_custom. Each of thse should contain a path to a CSV file and a mapping file (for mapping).
 
 E.g.
 ```
-curl -X POST -F "locations=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/locations.csv" -F "organizations=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/organizations.csv" -F "services=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input/services.csv" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
+curl -X POST -F "input_path=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
 ```
 
+The response will be a zip file of the transformed data. You can also pass add `-F "include_custom=true"` if your input data has custom non-HSDS columns you wish to include. 
+
 The API then streams a zip file back with the properly transformed data. The zip is also saved locally on the API server (maybe your local env) at `data.zip` in the root directory
+
+### Custom Transformers
+The BaseTransformer maps data from the input directory to compliant HSDS datapackage and CSVs using the mapping.yaml, and it requires a pretty one-to-one and straightforward mapping. You may need additional cleanup, parsing, or mapping, such as parsing out schedule text. If so, you can create a custom transformer and specify it when running the script or using the API. Check out the `lib/open_referral_transformer/custom` directory for examples.
+
+1. Write your custom transformation code.
+1. Save it as a class in `lib/open_referral_transformer/custom` following the naming conventions already there.
+1. Add the class name to the array of valid custom transformers in the `OpenReferralTransformer::Runner` class.
+1. Specify this custom transformer when invoking the transformer:
+
+```
+OpenReferralTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
+```
+
+or when making a request to the API:
+
+```
+curl -X POST -F "custom_transformer=Open211MiamiTransformer" -F "input_path=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
+```
+
+
+## Examples
+You can find examples of data and mappings in the `examples` directory.
 
 ## Related Projects
 

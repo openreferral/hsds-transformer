@@ -1,0 +1,386 @@
+Services-ID,Title,Is this service open?,Service type,Same phone number as organization?,Phone number,Level of service,Is this service a hotline?,Is this service an advice desk or walk-in clinic?,Average volume for this service,Same hours as location,Service availability,Is this location open at least weekly,Geolocation,Same income eligibility as location,Income eligibility and fees,Flat fee description,Sliding scale fees description,Max percentage of income standard,Amenities offered,Navigator availability,Is printing free for legal self-help center users?,Printing costs,Is scanning free for legal self-help center users?,Scanning costs,Is this service limited to specific populations?,An individual must be one of these to qualify,Featured content,Application process,Application form link,Process for applying by email,Process for applying by phone,Process for applying online,Process for walk-ins,Maximum callbacks per intake slot,Callback slots per applicant,Service is delivered,Website address,Organization ID,Location ID,Income standard for eligibility
+135836,Free legal information and forms in Cook County,Yes,Legal self-help center,Yes,847-392-0100,,,,,,,,"Geolocation is 42.108547, -87.974705",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers
+
+    Scanners",Navigation help is provided during open hours,No,$0.05 per page for black & white; $0.50 per page for color,Yes,,No,,"Written eviction notices
+
+    Understanding eviction as a tenant
+
+    Legal duties of my landlord
+
+    Fighting deportation and removal
+
+    Getting a divorce
+
+    Being sued for $10,000 or less",,,,,,,0,3,,http://www.ahml.info/,131321,135831,
+132741,North Lawndale legal clinic,Yes,Direct representation,Yes,(312) 341-1070,"Brief services
+
+    Advice",No,Yes,,Yes,Fixed hours,No,"Geolocation is 41.877445, -87.723846",Yes,Free to eligible persons/entities,,,150%,,,,,,,No,,,"Telephone
+
+    Walk-in",,,"All clinics are walk-in only, we do not make appointments.
+
+Call 312-341-1070, select your preferred language, and choose option 4 for more information about LAF's legal clinics.",,"Walk-in clients are seen on a first-come, first-served basis. Doors open at 4PM. If you arrive before the clinic closes, you will be seen.",0,3,In Person,,131321,135831,Federal Poverty Level
+129441,Public benefits outreach and enrollment project - Englewood,Yes,Direct representation,Yes,(312) 745-1133,Brief services,No,Yes,20clients/cases served per month.,Yes,Fixed hours,Yes,"Geolocation is 41.778204, -87.641571",Yes,Free to eligible persons/entities,,,125%,,,,,,,No,,,Walk-in,,,,,"First come, first served. It is best to come at 9 a.m. to receive assistance.",,,In Person,,127446,132736,Area median income
+129071,Free information and forms in Cook County,Yes,Legal self-help center,No,(847) 448-8600,,,,,,,,"Geolocation is 42.057696, -87.696561",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Referrals to legal aid
+
+    Website navigator
+
+    Printers
+
+    Scanners",Navigation help is provided during open hours,No,$0.20 a page for black and white copies; $0.50 cents a page for color,Yes,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Understanding eviction as a tenant
+
+    A living will vs power of attorney for healthcare
+
+    Power of attorney for property
+
+    Is bankruptcy right for me?",,,,,,,,,,https://www.epl.org/,131321,131331,Federal Poverty Level
+127461,Free bankruptcy filing,Yes,Direct representation,Yes,(347) 850-2656,Brief services,No,No,5000clients/cases served per month.,,Available 24/7/365,,,Yes,Free to eligible persons/entities,,,100%,,,,,,,No,,,"Telephone
+
+    Online",https://my.upsolve.org/,,"You will be able to speak to us if you call during business hours. If you call after business hours, please leave a message and we will get back to you in 24 hours.",Click the link below to get started.,,,,"Phone
+
+    Online/Remote (including real-time and asynchronous communications)",,127446,129431,Federal Poverty Level
+127216,Free legal information and forms in Morgan County,Yes,Legal self-help center,Yes,(217) 626-1553,,,,,,,,"Geolocation is 39.875106, -89.916317",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://www.pspld.com/,25686,129426,
+127206,Free legal information and forms in Morgan County,Yes,Legal self-help center,Yes,(217) 476-3417,,,,,,,,"Geolocation is 39.886126, -90.009613",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://www.pspld.com,25686,129066,Area median income
+127186,Free legal information and forms in Menard County,Yes,Legal self-help center,Yes,(217) 626-1553,,,,,,,,"Geolocation is 39.875106, -89.916317",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://www.pspld.com/,25741,127456,
+127176,Free legal information and forms in Menard County,Yes,Legal self-help center,Yes,(217) 476-3417,,,,,,,,"Geolocation is 39.886126, -90.009613",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://www.pspld.com/,25741,127211,
+127166,Free legal information and forms in Cass County,Yes,Legal self-help center,Yes,(217) 626-1553,,,,,,,,"Geolocation is 39.875106, -89.916317",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Getting an order of protection for domestic violence
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://www.pspld.com/,25741,127201,
+127156,Free legal information and forms in Sangamon County,Yes,Legal self-help center,Yes,(217) 476-3417,,,,,,,,"Geolocation is 39.886126, -90.009613",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less
+
+    Getting an order of protection for domestic violence",,,,,,,,,,http://www.pspld.com/,25741,127181,
+127061,Free legal information and forms in Cass County,Yes,Legal self-help center,Yes,(217) 476-3417,,,,,,,,"Geolocation is 39.886126, -90.009613",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less
+
+    Getting an order of protection for domestic violence",,,,,,,,,,http://www.pspld.com/,25741,127171,
+127051,Free legal information and forms in Sangamon County,Yes,Legal self-help center,Yes,(217) 626-1553,,,,,,,,"Geolocation is 39.875106, -89.916317",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.10 cents per page for black and white; $0.25 cents per page for color,,,No,,"Getting a divorce
+
+    Avoiding mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Chapter 13 versus Chapter 7 bankruptcy
+
+    Suing someone for $10,000 or less
+
+    Getting an order of protection for domestic violence",,,,,,,,,,http://www.pspld.com/,25796,127161,
+124276,Free legal information and forms in Cass County,Yes,Legal self-help center,Yes,(217) 452-3846,,,,,,,,"Geolocation is 39.948431, -90.202632",Yes,Free to everyone,,,,"Computers & Internet
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers",Navigation help is provided during open hours,No,$0.20 per page,,,No,,"Getting a divorce
+
+    Getting child support
+
+    Getting an order of protection for domestic violence
+
+    Responding to a lawsuit
+
+    Is bankruptcy right for me?
+
+    Suing someone for $10,000 or less",,,,,,,,,,http://virginiamemorialpubliclibrary.com/,25796,127151,
+122701,Free legal information and forms in Adams County,Yes,Legal self-help center,Yes,(217) 277-2100,,,,,,,,"Geolocation is 39.931262, -91.37972",Yes,Free to everyone,,,,"Computers & Internet
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Printers
+
+    Scanners",,Yes,,Yes,,No,,"Getting a divorce
+
+    Respond to a mortgage foreclosure complaint
+
+    Understanding eviction as a tenant
+
+    Getting an order of protection for domestic violence
+
+    Getting child support
+
+    Changing child support payments",,,,,,,,,,http://www.co.adams.il.us/Circuit_Clerk/index.htm,25796,127056,
+120306,Free legal information and court forms in Jackson County,Yes,Legal self-help center,Yes,(618) 457-3215,,,,,,,,"Geolocation is 37.728408, -89.222946",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Paper court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Printers",,Yes,,,,No,,"Getting a divorce
+
+    Being sued for $10,000 or less
+
+    Post judgment debt collections
+
+    Options for dealing with foreclosure
+
+    Understanding eviction as a tenant
+
+    My rights if I get a traffic ticket",,,,,,,,,,http://explorecarbondale.com/node/61,25796,127046,
+120061,Free legal information and forms in Cook County,Yes,Legal self-help center,Yes,847-253-5675,,,,,,,,"Geolocation is 42.068179, -87.932697",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers
+
+    Scanners",Navigation help is provided during open hours,No,$0.10 per page for black and white; $0.25 per page for color,Yes,,No,,"Getting a divorce
+
+    Understanding eviction as a tenant
+
+    Options for dealing with foreclosure
+
+    Living will
+
+    Getting parental responsibilities or custody of a child
+
+    Criminal record expungement or sealing request",,,,,,,,,,https://mppl.org/,127446,125091,
+116931,Free legal information and forms in Clinton County,Yes,Legal self-help center,Yes,618.594.6615,,,,,,,,"Geolocation is 38.60931, -89.376252",Yes,Free to everyone,,,,"Computers & Internet
+
+    Online court forms
+
+    Online legal info
+
+    Printed legal info
+
+    Printers
+
+    Scanners",,No,$.50 per page,Yes,,No,,"Being sued for $10,000 or less
+
+    Getting a divorce
+
+    Changing child support payments
+
+    Specify or modify parenting time
+
+    Forcing a parent to pay child support
+
+    Getting an order of protection for domestic violence",,,,,,,,,,http://clintoncountycircuitclerk.com/,127446,124271,
+115961,Free legal information and forms in Sangamon County,Yes,Legal self-help center,Yes,(217) 753-4900,,,,,,,,"Geolocation is 39.798379, -89.646561",Yes,Free to everyone,,,,"Computers & Internet
+
+    WiFi
+
+    Online court forms
+
+    Online legal info
+
+    Online referrals to legal help
+
+    Website navigator
+
+    Printers
+
+    Scanners",Navigation help is provided during open hours,No,$0.25 per page for black & white page; $0.50 per page for color,Yes,,No,,"Getting a divorce
+
+    Being sued for $10,000 or less
+
+    Being sued for mortgage foreclosure
+
+    Understanding eviction as a tenant
+
+    Enforcing an order of protection
+
+    Changing your name",,,,,,,,,,http://www.lincolnlibrary.info/,25686,122696,
