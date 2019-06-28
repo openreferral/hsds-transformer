@@ -14,8 +14,8 @@ describe Api do
       it "returns a zip file" do
         # TODO Stub this test out
 
-        input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-        mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+        input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
+        mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
 
         params = {
           input_path: input_path,
@@ -32,8 +32,8 @@ describe Api do
         it "returns a zip file" do
           # TODO Stub this test out
 
-          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
+          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
 
           params = {
             custom_transformer: "Open211MiamiTransformer",
@@ -52,7 +52,7 @@ describe Api do
     context "invalid request" do
       context "no mapping param provided" do
         it "returns an error status" do
-          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
 
           params = {
             input_path: input_path,
@@ -66,7 +66,7 @@ describe Api do
 
       context "no input_path param provided" do
         it "returns an error status" do
-          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
 
           params = {
             mapping: mapping_path,
@@ -82,8 +82,8 @@ describe Api do
         it "returns an error status" do
           # TODO Change this to 422
 
-          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+          input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
+          mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
 
           params = {
               custom_transformer: "BadTransformer",

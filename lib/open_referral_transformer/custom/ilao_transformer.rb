@@ -4,36 +4,33 @@ module OpenReferralTransformer
     STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
 
     def apply_custom_transformation
-      # collect_address_data
+      parse_address_data
       # process_regular_schedule_text
-      # collect_schedule_data
-      # collect_sal_data
     end
 
     private
 
-    def collect_address_data(address_key:, address_hash:, input:)
-      key = address_hash["field"]
-      address_row = {}
-      address = input[address_key]
-      postal_code = address.split(//).last(5).join
-      postal_code = postal_code.match(/\d{5}/)
-      if (postal_code != "")
-        address_row["postal_code"] = postal_code
-        address = address[0..-7]
-      end
+    def parse_address_data
+      # TODO do this for physical too
+      @postal_addresses.each do |address_row|
+        address_str = address_row["address_1"]
+        postal_code = address_str.split(//).last(5).join
+        postal_code = postal_code.match(/\d{5}/)
 
-      state = address.split(//).last(2).join.upcase
-      if STATE_ABBREVIATIONS.include?(state)
-        address_row["state_province"] = state
-        address = address[0..-5]
-      end
-      address_row[key] = address
+        if postal_code != ""
+          address_row["postal_code"] = postal_code.to_s
+          address_str = address_str[0..-7]
+        end
 
-      foreign_key = address_hash["foreign_key_name"]
-      foreign_key_value = address_hash["foreign_key_value"]
-      address_row[foreign_key] = input[foreign_key_value]
-      address_data << address_row
+        state = address_str.split(//).last(2).join.upcase
+
+        if STATE_ABBREVIATIONS.include?(state)
+          address_row["state_province"] = state
+          address_str = address_str[0..-5]
+        end
+
+        address_row["address_1"] = address_str
+      end
     end
 
     def process_regular_schedule_text(schedule_key:, schedule_hash:, input:)

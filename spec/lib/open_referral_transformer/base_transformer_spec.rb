@@ -14,103 +14,50 @@ describe OpenReferralTransformer::BaseTransformer do
     xit "transforms a group of CSVs into valid datapackage.json and linked resources"
   end
 
+  # This can probably be better
   describe "#transform" do
     it "creates phone records for phone numbers mapped in input csv" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
+      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
         input_path: input_path,
         mapping: mapping_path
       )
 
       transformer.transform
-      output_file = CSV.read transformer.output_phones_path
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/phones.csv"
-      expect(output_file).to eq(fixture)
-    end
 
-    # TODO add distinction between postel and physical addresses
-    xit "creates address records for address numbers mapped in input csv" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_path: input_path,
-          mapping: mapping_path
-      )
+      output_phones = CSV.read transformer.output_phones_path
+      phones_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/phones.csv"
+      expect(output_phones).to eq(phones_fixture)
 
-      transformer.transform
+      output_organizations = CSV.read transformer.output_organizations_path
+      organizations_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/organizations.csv"
+      expect(output_organizations).to eq(organizations_fixture)
 
-      output_file = CSV.read transformer.output_addresses_path
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/addresses.csv"
-      expect(output_file).to eq(fixture)
-    end
+      output_locations = CSV.read transformer.output_locations_path
+      locations_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/locations.csv"
+      expect(output_locations).to eq(locations_fixture)
 
-    # TODO add parsing back with custom processing
-    xit "creates schedule records for schedules mapped in input csv" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_path: input_path,
-          mapping: mapping_path
-      )
+      # TODO implement required fields
+      output_services = CSV.read transformer.output_services_path
+      services_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/services.csv"
+      expect(output_services).to eq(services_fixture)
 
-      transformer.transform
+      output_postal_addresses = CSV.read transformer.output_postal_addresses_path
+      postal_addresses_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/postal_addresses.csv"
+      expect(output_postal_addresses).to eq(postal_addresses_fixture)
 
-      output_file = CSV.read transformer.output_regular_schedules_path
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/schedules.csv"
-      expect(output_file).to eq(fixture)
-    end
-  end
+      output_regular_schedules = CSV.read transformer.output_regular_schedules_path
+      regular_schedules_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/regular_schedules.csv"
+      expect(output_regular_schedules).to eq(regular_schedules_fixture)
 
-  describe "#transform_organizations" do
-    it "converts an organizations file into valid HSDS organizations data" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_path: input_path,
-          mapping: mapping_path
-      )
+      output_services_at_location = CSV.read transformer.output_services_at_location_path
+      services_at_location_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/services_at_location.csv"
+      expect(output_services_at_location).to eq(services_at_location_fixture)
 
-      transformer.transform
-
-      output_file = CSV.read transformer.output_organizations_path
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/organizations.csv"
-      expect(output_file).to eq(fixture)
-    end
-  end
-
-  describe "#transform_locations" do
-    it "converts a locations file into valid HSDS locations data" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_path: input_path,
-          mapping: mapping_path
-      )
-
-      transformer.transform
-
-      output_file = CSV.read transformer.output_locations_path
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/locations.csv"
-      expect(output_file).to eq(fixture)
-    end
-  end
-
-  describe "#transform_services" do
-    # TODO implement required fields
-    xit "converts a services file into valid HSDS services data" do
-      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
-      mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_path: input_path,
-          mapping: mapping_path
-      )
-
-      output_file = CSV.read transformer.output_services_path
-
-      transformer.transform
-      fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/output/resources/services.csv"
-      expect(output_file).to eq(fixture)
+      output_eligibility = CSV.read transformer.output_eligibilities_path
+      eligibility_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/eligibility.csv"
+      expect(output_eligibility).to eq(eligibility_fixture)
     end
   end
 end

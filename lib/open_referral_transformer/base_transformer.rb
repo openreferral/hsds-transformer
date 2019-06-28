@@ -5,7 +5,7 @@ module OpenReferralTransformer
 
     attr_reader :mapping, :include_custom
 
-    SUPPORTED_HSDS_MODELS = %w(organizations services locations addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_location)
+    SUPPORTED_HSDS_MODELS = %w(organizations services locations physical_addresses postal_addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_location)
 
     def self.run(args)
       new(args).transform
@@ -37,7 +37,7 @@ module OpenReferralTransformer
 
       apply_custom_transformation
 
-      # make data dir for these files
+      # make data path for these files
       Dir.mkdir(output_datapackage_path) unless Dir.exists?(output_datapackage_path)
       Dir.mkdir(output_data_path) unless Dir.exists?(output_data_path)
 
@@ -50,7 +50,7 @@ module OpenReferralTransformer
     end
 
     def transform_file(input_file_name, file_mapping)
-      path = @input_dir + input_file_name
+      path = @input_path + input_file_name
       org_mapping = file_mapping["columns"]
 
       # Now we want to process each row in a way that allows the row to create multiple objects,
@@ -143,6 +143,8 @@ module OpenReferralTransformer
     def zip_output
       input_data_files = Dir.glob(File.join(output_data_path, '**/*'))
 
+
+      File.delete(zipfile_name) if File.exists?(zipfile_name)
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         # Add databpackage.json
