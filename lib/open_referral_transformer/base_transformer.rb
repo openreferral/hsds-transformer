@@ -3,8 +3,6 @@ module OpenReferralTransformer
     include OpenReferralTransformer::Headers
     include OpenReferralTransformer::FilePaths
 
-    STATE_ABBREVIATIONS = %w(AK AL AR AZ CA CO CT DC DE FL GA HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA RI SC SD TN TX UT VA VT WA WI WV WY)
-
     attr_reader :mapping, :include_custom
 
     def self.run(args)
@@ -15,7 +13,6 @@ module OpenReferralTransformer
     def initialize(args)
       @mapping = parse_mapping(args[:mapping])
 
-      # "include_custom" indicates that the final output CSVs should include the non-HSDS columns that the original input CSVs had
       @include_custom = args[:include_custom]
       @zip_output = args[:zip_output]
 
