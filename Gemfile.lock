@@ -21,6 +21,8 @@ GEM
     rack (2.0.6)
     rack-protection (2.0.5)
       rack
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     rb-readline (0.5.5)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
@@ -65,6 +67,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   pry
+  rack-test
   rb-readline
   rest-client
   rspec

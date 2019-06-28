@@ -4,8 +4,8 @@ module OpenReferralTransformer
     VALID_CUSTOM_TRANSFORMERS = %w(Open211MiamiTransformer IlaoTransformer)
 
     # Args:
-    # input_dir - indicates the dir containing the input data files
-    # output_dir - indicates the dir you want the resulting HSDS files to go
+    # input_path - indicates the dir containing the input data files
+    # output_path - indicates the dir you want the resulting HSDS files to go
     # include_custom - Default: false - indicates that the final output CSVs should include the non-HSDS columns that the original input CSVs had
     # zip_output - Default: false - indicates whether you want the output to be zipped into a single datapackage.zip
     # custom_transformer - Default: nil - indicates the custom transformer class you want to use. This arg does not get passed to transformer classes

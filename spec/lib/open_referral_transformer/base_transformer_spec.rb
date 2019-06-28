@@ -5,7 +5,7 @@ ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_statu
 LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
 SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
 PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
-OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::FilePaths::DEFAULT_OUTPUT_DIR
+OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::FilePaths::DEFAULT_OUTPUT_PATH
 
 
 describe OpenReferralTransformer::BaseTransformer do
@@ -16,10 +16,10 @@ describe OpenReferralTransformer::BaseTransformer do
 
   describe "#transform" do
     it "creates phone records for phone numbers mapped in input csv" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-        input_dir: input_dir,
+        input_path: input_path,
         mapping: mapping_path
       )
 
@@ -31,10 +31,10 @@ describe OpenReferralTransformer::BaseTransformer do
 
     # TODO add distinction between postel and physical addresses
     xit "creates address records for address numbers mapped in input csv" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_dir: input_dir,
+          input_path: input_path,
           mapping: mapping_path
       )
 
@@ -47,10 +47,10 @@ describe OpenReferralTransformer::BaseTransformer do
 
     # TODO add parsing back with custom processing
     xit "creates schedule records for schedules mapped in input csv" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_dir: input_dir,
+          input_path: input_path,
           mapping: mapping_path
       )
 
@@ -64,10 +64,10 @@ describe OpenReferralTransformer::BaseTransformer do
 
   describe "#transform_organizations" do
     it "converts an organizations file into valid HSDS organizations data" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_dir: input_dir,
+          input_path: input_path,
           mapping: mapping_path
       )
 
@@ -81,10 +81,10 @@ describe OpenReferralTransformer::BaseTransformer do
 
   describe "#transform_locations" do
     it "converts a locations file into valid HSDS locations data" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_dir: input_dir,
+          input_path: input_path,
           mapping: mapping_path
       )
 
@@ -99,10 +99,10 @@ describe OpenReferralTransformer::BaseTransformer do
   describe "#transform_services" do
     # TODO implement required fields
     xit "converts a services file into valid HSDS services data" do
-      input_dir = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
+      input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/mapping.yaml"
       transformer = OpenReferralTransformer::BaseTransformer.new(
-          input_dir: input_dir,
+          input_path: input_path,
           mapping: mapping_path
       )
 

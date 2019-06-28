@@ -23,6 +23,10 @@ class Api < Sinatra::Base
       halt 422, "A mapping file is required."
     end
 
+    if input_path.nil?
+      halt 422, "An input_path is required."
+    end
+
     transformer = OpenReferralTransformer::Runner.run(
       input_path: input_path,
       mapping: mapping_uri,

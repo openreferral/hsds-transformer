@@ -10,4 +10,5 @@ gem "rest-client"
 group :development, :test do
   gem "pry"
   gem "rb-readline"
+  gem "rack-test"
 end
