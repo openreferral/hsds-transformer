@@ -5,7 +5,7 @@ module OpenReferralTransformer
 
     attr_reader :mapping, :include_custom
 
-    SUPPORTED_HSDS_MODELS = %w(organizations services locations physical_addresses postal_addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_location)
+    SUPPORTED_HSDS_MODELS = %w(organizations services locations physical_addresses postal_addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_locations)
 
     def self.run(args)
       new(args).transform

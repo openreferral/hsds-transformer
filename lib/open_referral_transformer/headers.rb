@@ -7,7 +7,7 @@ module OpenReferralTransformer
     PHYSICAL_ADDRESSES_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
     POSTAL_ADDRESSES_HEADERS = %w(id location_id organization_id attention address_1 city region state_province postal_code country)
     REGULAR_SCHEDULES_HEADERS = %w(id service_id location_id service_at_location_id weekday opens_at closes_at)
-    SERVICES_AT_LOCATION_HEADERS = %w(id service_id location_id description)
+    SERVICES_AT_LOCATIONS_HEADERS = %w(id service_id location_id description)
     ELIGIBILITIES_HEADERS = %w(id service_id eligibility)
     CONTACTS_HEADERS = %w(id organization_id service_id service_at_location_id name title department email)
     LANGUAGES_HEADERS = %w(id service_id location_id language)
