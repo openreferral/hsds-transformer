@@ -28,7 +28,7 @@ module OpenReferralTransformer
         service.merge!("name" => formatted_name)
 
         # Set the org ID as the parent provider id
-        if service["parent_provider_id"] != ""
+        if !service["parent_provider_id"].nil?
           service.merge!("organization_id" => service["parent_provider_id"])
         end
         service.delete "parent_provider_id"
@@ -110,7 +110,7 @@ module OpenReferralTransformer
 
     def remove_child_organizations
       @organizations.reject! do |org|
-        org["parent_provider_id"] != ""
+        !org["parent_provider_id"].nil?
       end
 
       @organizations.each { |org| org.delete("parent_provider_id") }
