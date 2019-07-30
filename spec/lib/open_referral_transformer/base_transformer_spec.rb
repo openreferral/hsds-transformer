@@ -51,7 +51,7 @@ describe OpenReferralTransformer::BaseTransformer do
       regular_schedules_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/regular_schedules.csv"
       expect(output_regular_schedules).to eq(regular_schedules_fixture)
 
-      output_services_at_location = CSV.read transformer.output_services_at_location_path
+      output_services_at_location = CSV.read transformer.output_services_at_locations_path
       services_at_location_fixture = CSV.read "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/output/services_at_location.csv"
       expect(output_services_at_location).to eq(services_at_location_fixture)
 
