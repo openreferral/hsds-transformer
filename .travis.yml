@@ -1,3 +1,5 @@
 language: ruby
+env:
+  - "ROOT_PATH=."
 
 script: bundle exec rspec spec
