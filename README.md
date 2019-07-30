@@ -1,4 +1,4 @@
-# Open Referral Transformer
+# HSDS Transformer
 ## Overview
 This app allows you to convert data into an HSDS-compliant [datapackage](https://frictionlessdata.io/specs/data-package/).
 
@@ -10,7 +10,7 @@ This transformer currently transforms data into HSDS version 1.1.
 Lots of people have health and human services data, but it's all in different structures and formats. Many groups want to share their data, or use data that's shared with them, but the lack of standardized data or an easy way to standardize the data presents a major barrier.
 
 ### Solution
-[Open Referral](https://openreferral.org/) provides a Human Services Data Specification that groups can use to share data via a common format. The Open Referral Transformer tool (this project) enables a group or person to transform data into an HSDS-compliant data package, so that it can then be combined with other data or used in any number of applications. 
+[Open Referral](https://openreferral.org/) provides a Human Services Data Specification that groups can use to share data via a common format. The HSDS Transformer tool (this project) enables a group or person to transform data into an HSDS-compliant data package, so that it can then be combined with other data or used in any number of applications.
 
 ### Case Study: Illinois Legal Aid Online (ILAO)
 The real-world case that's motivating this project is [Illinois Legal Aid Online (ILAO)](https://www.illinoislegalaid.org/), an organization that helps individuals in Illinois find legal help or resources online. ILAO has a resource directory of community services data, and they'd like to update this data to be formatted in compliance with HSDS version 1.1. They also are looking to incorporate other data sets in disparate formats and structures into their own database in order to better serve Illinois residents with more extensive and more accurate information.
