@@ -1,7 +1,7 @@
-module OpenReferralTransformer
+module HsdsTransformer
   class BaseTransformer
-    include OpenReferralTransformer::Headers
-    include OpenReferralTransformer::FilePaths
+    include HsdsTransformer::Headers
+    include HsdsTransformer::FilePaths
 
     attr_reader :mapping, :include_custom
 

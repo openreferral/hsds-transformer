@@ -1,4 +1,4 @@
-module OpenReferralTransformer
+module HsdsTransformer
   module FilePaths
     DEFAULT_OUTPUT_PATH = "#{ENV["ROOT_PATH"]}/tmp"
     DEFAULT_INPUT_PATH = "#{ENV["ROOT_PATH"]}/"

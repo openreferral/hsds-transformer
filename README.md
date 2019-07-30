@@ -33,20 +33,20 @@ If it's not, proceed.
 
 ### Installing
 1. Clone this repo locally.
-2. In terminal, `cd` into the root of the open_referral_transformer directory.
-3. Create a new file called `.env`. Copy the contents of `.env.example` into the new `.env` file and update `Users/your_user/dev/open_referral_transformer` to be the correct path to this directory on your local environment (you can run `pwd` in terminal to find this out).
+2. In terminal, `cd` into the root of the hsds_transformer directory.
+3. Create a new file called `.env`. Copy the contents of `.env.example` into the new `.env` file and update `Users/your_user/dev/hsds_transformer` to be the correct path to this directory on your local environment (you can run `pwd` in terminal to find this out).
 4. Install all the gems by running `bundle install`
 
 ### Transforming
 Here's how to transform the data if you're familiar with Ruby:
 
 1. Make sure your data is saved locally as CSVs in this directory.
-2. Create a mapping.yaml file and store it locally in this directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/open_referral_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
+2. Create a mapping.yaml file and store it locally in this directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/hsds_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
 3. Open up an interactive Ruby session in terminal by running `irb` (or `pry` - up to you!)
-4. Require the class: `require "./lib/open_referral_transformer"`
+4. Require the class: `require "./lib/hsds_transformer"`
 5. Run the transformer: 
 ```
-OpenReferralTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
+HsdsTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
 ```
 6. Now check the `tmp` directory for your newly created HSDS files!
 
@@ -62,7 +62,7 @@ Make a POST request with params: input_path, mapping, include_custom. Each of th
 
 E.g.
 ```
-curl -X POST -F "input_path=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
+curl -X POST -F "input_path=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
 ```
 
 The response will be a zip file of the transformed data. You can also pass add `-F "include_custom=true"` if your input data has custom non-HSDS columns you wish to include. 
@@ -70,21 +70,21 @@ The response will be a zip file of the transformed data. You can also pass add `
 The API then streams a zip file back with the properly transformed data. The zip is also saved locally on the API server (maybe your local env) at `data.zip` in the root directory
 
 ### Custom Transformers
-The BaseTransformer maps data from the input directory to compliant HSDS datapackage and CSVs using the mapping.yaml, and it requires a pretty one-to-one and straightforward mapping. You may need additional cleanup, parsing, or mapping, such as parsing out schedule text. If so, you can create a custom transformer and specify it when running the script or using the API. Check out the `lib/open_referral_transformer/custom` directory for examples.
+The BaseTransformer maps data from the input directory to compliant HSDS datapackage and CSVs using the mapping.yaml, and it requires a pretty one-to-one and straightforward mapping. You may need additional cleanup, parsing, or mapping, such as parsing out schedule text. If so, you can create a custom transformer and specify it when running the script or using the API. Check out the `lib/hsds_transformer/custom` directory for examples.
 
 1. Write your custom transformation code.
-1. Save it as a class in `lib/open_referral_transformer/custom` following the naming conventions already there.
-1. Add the class name to the array of valid custom transformers in the `OpenReferralTransformer::Runner` class.
+1. Save it as a class in `lib/hsds_transformer/custom` following the naming conventions already there.
+1. Add the class name to the array of valid custom transformers in the `HsdsTransformer::Runner` class.
 1. Specify this custom transformer when invoking the transformer:
 
 ```
-OpenReferralTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
+HsdsTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/")
 ```
 
 or when making a request to the API:
 
 ```
-curl -X POST -F "custom_transformer=Open211MiamiTransformer" -F "input_path=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/open_referral_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
+curl -X POST -F "custom_transformer=Open211MiamiTransformer" -F "input_path=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
 ```
 
 

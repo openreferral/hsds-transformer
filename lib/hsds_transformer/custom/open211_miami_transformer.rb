@@ -1,5 +1,5 @@
-module OpenReferralTransformer
-  class Open211MiamiTransformer < OpenReferralTransformer::BaseTransformer
+module HsdsTransformer
+  class Open211MiamiTransformer < HsdsTransformer::BaseTransformer
     WEEKDAYS = %w(Monday Tuesday Wednesday Thursday Friday)
     ALL_DAYS = %w(Monday Tuesday Wednesday Thursday Friday Saturday Sunday)
     DAY_MAPPING = {

@@ -1,14 +1,14 @@
 require "spec_helper"
-require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
+require_relative "#{ENV["ROOT_PATH"]}/lib/hsds_transformer"
 
 ORGANIZATION_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
 LOCATION_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
 SERVICE_HEADERS = %w(id organization_id program_id name alternate_name description url email status interpretation_services application_process wait_time fees accreditations licenses)
 PHONE_HEADERS = %w(id location_id service_id organization_id contact_id service_at_location_id number extension type language description)
-OUTPUT_DIRECTORY_PATH = OpenReferralTransformer::FilePaths::DEFAULT_OUTPUT_PATH
+OUTPUT_DIRECTORY_PATH = HsdsTransformer::FilePaths::DEFAULT_OUTPUT_PATH
 
 
-describe OpenReferralTransformer::BaseTransformer do
+describe HsdsTransformer::BaseTransformer do
 
   describe ".run" do
     xit "transforms a group of CSVs into valid datapackage.json and linked resources"
@@ -19,7 +19,7 @@ describe OpenReferralTransformer::BaseTransformer do
     it "creates phone records for phone numbers mapped in input csv" do
       input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/input/"
       mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/base_transformer/mapping.yaml"
-      transformer = OpenReferralTransformer::BaseTransformer.new(
+      transformer = HsdsTransformer::BaseTransformer.new(
         input_path: input_path,
         mapping: mapping_path
       )
