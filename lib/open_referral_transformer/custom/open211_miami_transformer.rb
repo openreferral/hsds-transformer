@@ -12,11 +12,27 @@ module OpenReferralTransformer
         "sun" => "Sunday",
     }
 
+    TOP_LEVEL_TAXONOMIES = {
+        "B" => "Basic Needs",
+        "D" => "Consumer Services",
+        "F" => "Criminal Justice and Legal Services",
+        "H" => "Education",
+        "J" => "Environmental Quality",
+        "L" => "Health Care",
+        "N" => "Income Support and Employment",
+        "P" => "Individual and Family Life",
+        "R" => "Mental Health Care and Counseling",
+        "T" => "Organizational/Community/International Services",
+        "Y" => "Target Populations"
+    }
+
+    TAXONOMY_VOCAB = "Open211 Miami - AIRS"
+
     def apply_custom_transformation
       remove_child_organizations
       determine_services
       parse_regular_schedules_text
-      add_default_taxonomy_vocabulary
+      supplement_taxonomy
     end
 
     private
@@ -28,7 +44,7 @@ module OpenReferralTransformer
         service.merge!("name" => formatted_name)
 
         # Set the org ID as the parent provider id
-        if service["parent_provider_id"] != ""
+        if !service["parent_provider_id"].nil?
           service.merge!("organization_id" => service["parent_provider_id"])
         end
         service.delete "parent_provider_id"
@@ -110,15 +126,42 @@ module OpenReferralTransformer
 
     def remove_child_organizations
       @organizations.reject! do |org|
-        org["parent_provider_id"] != ""
+        !org["parent_provider_id"].nil?
       end
 
       @organizations.each { |org| org.delete("parent_provider_id") }
     end
 
-    def add_default_taxonomy_vocabulary
+    def supplement_taxonomy
       @taxonomies.each do |tax_row|
-        tax_row.merge!("vocabulary" => "Open211 Miami - AIRS")
+        if tax_row["id"].length == 1
+          category = nil # Already top-level
+        else
+          category = tax_row["id"][0]
+        end
+
+        suppl_attrs = {
+            "parent_id" => category,
+            "parent_name" => TOP_LEVEL_TAXONOMIES[category],
+            "vocabulary" => TAXONOMY_VOCAB
+        }
+
+        tax_row.merge!(suppl_attrs)
+      end
+
+      @taxonomies.concat(top_level_taxonomies)
+    end
+
+    def top_level_taxonomies
+      TOP_LEVEL_TAXONOMIES.map do |key, value|
+        {
+            "id" => key,
+            "name" => value,
+            "taxonomy_facet" => "Service",
+            "parent_id" => nil,
+            "parent_name" => nil,
+            "vocabulary" => TAXONOMY_VOCAB
+        }
       end
     end
   end
