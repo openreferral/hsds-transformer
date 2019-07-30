@@ -1,11 +1,11 @@
 require "spec_helper"
-require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
+require_relative "#{ENV["ROOT_PATH"]}/lib/hsds_transformer"
 
-describe OpenReferralTransformer::IlaoTransformer do
+describe HsdsTransformer::IlaoTransformer do
   it "parses and creates address rows correctly" do
     input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/custom/ilao/input/"
     mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/custom/ilao/mapping.yaml"
-    transformer = OpenReferralTransformer::IlaoTransformer.new(
+    transformer = HsdsTransformer::IlaoTransformer.new(
       input_path: input_path,
       mapping: mapping_path,
     )
@@ -21,7 +21,7 @@ describe OpenReferralTransformer::IlaoTransformer do
   xit "parses and creates schedule rows correctly" do
     input_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/custom/ilao/input/"
     mapping_path = "#{ENV["ROOT_PATH"]}/spec/fixtures/custom/ilao/mapping.yaml"
-    transformer = OpenReferralTransformer::BaseTransformer.new(
+    transformer = HsdsTransformer::BaseTransformer.new(
         input_path: input_path,
         mapping: mapping_path
     )

@@ -1,4 +1,4 @@
-module OpenReferralTransformer
+module HsdsTransformer
   module Headers
     ORGANIZATIONS_HEADERS = %w(id name alternate_name description email url tax_status tax_id year_incorporated legal_status)
     LOCATIONS_HEADERS = %w(id organization_id name alternate_name description transportation latitude longitude)
@@ -16,7 +16,7 @@ module OpenReferralTransformer
     SERVICE_TAXONOMIES_HEADERS = %w(id service_id taxonomy_id taxonomy_detail)
 
     def headers(row, model)
-      const_name = "OpenReferralTransformer::Headers::" + model.upcase + "_HEADERS"
+      const_name = "HsdsTransformer::Headers::" + model.upcase + "_HEADERS"
       # TODO make sure valid
       const = Object.const_get(const_name)
 

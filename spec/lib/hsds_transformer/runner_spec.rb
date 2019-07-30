@@ -1,7 +1,7 @@
 require "spec_helper"
-require_relative "#{ENV["ROOT_PATH"]}/lib/open_referral_transformer"
+require_relative "#{ENV["ROOT_PATH"]}/lib/hsds_transformer"
 
-describe OpenReferralTransformer::Runner do
+describe HsdsTransformer::Runner do
   describe ".run" do
     context "with valid arguments" do
       it "initiates core transformer as default" do
@@ -13,11 +13,11 @@ describe OpenReferralTransformer::Runner do
             zip_output: true
         }
 
-        allow(OpenReferralTransformer::BaseTransformer).to receive(:run).with(args)
+        allow(HsdsTransformer::BaseTransformer).to receive(:run).with(args)
 
-        OpenReferralTransformer::Runner.run(args)
+        HsdsTransformer::Runner.run(args)
 
-        expect(OpenReferralTransformer::BaseTransformer).to have_received(:run).with(args)
+        expect(HsdsTransformer::BaseTransformer).to have_received(:run).with(args)
       end
 
       it "initiates core transformer as default" do
@@ -31,11 +31,11 @@ describe OpenReferralTransformer::Runner do
 
         args = base_args.merge(custom_transformer: "Open211MiamiTransformer")
 
-        allow(OpenReferralTransformer::Open211MiamiTransformer).to receive(:run).with(base_args)
+        allow(HsdsTransformer::Open211MiamiTransformer).to receive(:run).with(base_args)
 
-        OpenReferralTransformer::Runner.run(args)
+        HsdsTransformer::Runner.run(args)
 
-        expect(OpenReferralTransformer::Open211MiamiTransformer).to have_received(:run).with(base_args)
+        expect(HsdsTransformer::Open211MiamiTransformer).to have_received(:run).with(base_args)
       end
     end
 
@@ -51,8 +51,8 @@ describe OpenReferralTransformer::Runner do
         }
 
         expect{
-          OpenReferralTransformer::Runner.run(args)
-        }.to raise_error(OpenReferralTransformer::InvalidCustomTransformerException)
+          HsdsTransformer::Runner.run(args)
+        }.to raise_error(HsdsTransformer::InvalidCustomTransformerException)
       end
     end
   end

@@ -1,4 +1,4 @@
-module OpenReferralTransformer
+module HsdsTransformer
   class Runner
 
     VALID_CUSTOM_TRANSFORMERS = %w(Open211MiamiTransformer IlaoTransformer)
@@ -25,7 +25,7 @@ module OpenReferralTransformer
     end
 
     def self.custom_transformer(custom)
-      klass = "OpenReferralTransformer::" + custom
+      klass = "HsdsTransformer::" + custom
       Object.const_get(klass)
     end
   end

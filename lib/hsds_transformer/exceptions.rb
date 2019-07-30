@@ -1,4 +1,4 @@
-module OpenReferralTransformer
+module HsdsTransformer
 
   class InvalidCustomTransformerException < ::Exception; end
 

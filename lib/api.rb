@@ -1,6 +1,6 @@
 require "sinatra"
 require "sinatra/base"
-require_relative "../lib/open_referral_transformer"
+require_relative "../lib/hsds_transformer"
 
 class Api < Sinatra::Base
 
@@ -27,7 +27,7 @@ class Api < Sinatra::Base
       halt 422, "An input_path is required."
     end
 
-    transformer = OpenReferralTransformer::Runner.run(
+    transformer = HsdsTransformer::Runner.run(
       input_path: input_path,
       mapping: mapping_uri,
       include_custom: include_custom,
