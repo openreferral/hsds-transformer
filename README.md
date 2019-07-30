@@ -1,4 +1,5 @@
 # HSDS Transformer
+[![Build Status](https://travis-ci.com/switzersc/hsds_transformer.svg?branch=master)](https://travis-ci.com/switzersc/hsds_transformer)
 ## Overview
 This app allows you to convert data into an HSDS-compliant [datapackage](https://frictionlessdata.io/specs/data-package/).
 
