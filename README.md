@@ -70,6 +70,19 @@ The response will be a zip file of the transformed data. You can also pass add `
 
 The API then streams a zip file back with the properly transformed data. The zip is also saved locally on the API server (maybe your local env) at `data.zip` in the root directory
 
+### Starting the API with Docker
+Before anything else, make sure you have docker installed and running.
+
+First, build the image locally:
+
+`docker build . -t transformer_api`
+
+Now, run it:
+
+`docker run -p 4567:4567 transformer_api`
+
+You should now be able to interact with the API at `http://localhost:4567`.
+
 ### Custom Transformers
 The BaseTransformer maps data from the input directory to compliant HSDS datapackage and CSVs using the mapping.yaml, and it requires a pretty one-to-one and straightforward mapping. You may need additional cleanup, parsing, or mapping, such as parsing out schedule text. If so, you can create a custom transformer and specify it when running the script or using the API. Check out the `lib/hsds_transformer/custom` directory for examples.
 

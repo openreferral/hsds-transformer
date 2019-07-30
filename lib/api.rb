@@ -3,6 +3,7 @@ require "sinatra/base"
 require_relative "../lib/hsds_transformer"
 
 class Api < Sinatra::Base
+  set :bind, '0.0.0.0'
 
   before do
     content_type 'multipart/form-data'
