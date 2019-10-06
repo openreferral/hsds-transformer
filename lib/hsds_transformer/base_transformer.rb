@@ -5,7 +5,7 @@ module HsdsTransformer
 
     attr_reader :mapping, :include_custom
 
-    SUPPORTED_HSDS_MODELS = %w(organizations services locations physical_addresses postal_addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_locations)
+    SUPPORTED_HSDS_MODELS = %w(organizations services locations physical_addresses postal_addresses phones service_taxonomies regular_schedules taxonomies accessibility_for_disabilities contacts languages eligibilities services_at_locations service_areas)
 
     def self.run(args)
       new(args).transform

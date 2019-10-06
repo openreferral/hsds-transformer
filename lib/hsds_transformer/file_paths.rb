@@ -8,7 +8,7 @@ module HsdsTransformer
                 :output_phones_path, :output_physical_addresses_path, :output_postal_addresses_path,
                 :output_services_at_locations_path, :output_eligibilities_path, :output_contacts_path,
                 :output_languages_path, :output_accessibility_for_disabilities_path, :output_taxonomies_path,
-                :output_service_taxonomies_path, :output_regular_schedules_path
+                :output_service_taxonomies_path, :output_regular_schedules_path, :output_service_areas_path
 
     # TODO DRY this up
     def set_file_paths(args)
@@ -32,6 +32,7 @@ module HsdsTransformer
       @output_taxonomies_path = output_data_path + "/taxonomy.csv"
       @output_service_taxonomies_path = output_data_path + "/services_taxonomy.csv"
       @output_regular_schedules_path = output_data_path + "/regular_schedules.csv"
+      @output_service_areas_path = output_data_path + "/service_areas.csv"
 
       @datapackage_json_path = File.join(ENV["ROOT_PATH"], "lib/datapackage/datapackage.json")
     end

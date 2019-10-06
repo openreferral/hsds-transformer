@@ -14,6 +14,7 @@ module HsdsTransformer
     ACCESSIBILITY_FOR_DISABILITIES_HEADERS = %w(id location_id accessibility details)
     TAXONOMIES_HEADERS = %w(id name parent_id parent_name vocabulary)
     SERVICE_TAXONOMIES_HEADERS = %w(id service_id taxonomy_id taxonomy_detail)
+    SERVICE_AREAS_HEADERS = %w(id service_id service_area description)
 
     def headers(row, model)
       const_name = "HsdsTransformer::Headers::" + model.upcase + "_HEADERS"
