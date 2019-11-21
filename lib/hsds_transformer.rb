@@ -5,6 +5,7 @@ require "zip"
 require "zip/zip"
 require "rest_client"
 
+require "hsds_transformer/version"
 require "hsds_transformer/file_paths"
 require "hsds_transformer/headers"
 require "hsds_transformer/exceptions"
