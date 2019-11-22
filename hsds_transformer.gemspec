@@ -1,3 +1,7 @@
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+require 'hsds_transformer/version'
+
 Gem::Specification.new do |s|
   s.name        = 'hsds_transformer'
   s.version     = HsdsTransformer::VERSION
