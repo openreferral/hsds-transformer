@@ -164,7 +164,7 @@ module HsdsTransformer
       CSV.open(path, 'wb') do |csv|
         csv << headers
         data.uniq.each do |row|
-          csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all?(nil)
+          csv << CSV::Row.new(row.keys, row.values).values_at(*headers) unless row.values.all? { |v| v.nil? || v.strip == '' }
         end
       end
     end
