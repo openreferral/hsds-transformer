@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'hsds_transformer'
-  s.version     = '0.0.3'
+  s.version     = HsdsTransformer::VERSION
   s.date        = '2019-10-06'
   s.summary     = 'Human Services Data Spec Transformer'
   s.description = 'Gem for transforming data files into HSDS formatted datapackage'
