@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hsds_transformer (0.0.4)
+    hsds_transformer (0.0.5)
       rest-client (~> 2.0.2, >= 2.0.2)
       rubyzip (~> 1.3.0, >= 1.3.0)
       sinatra (~> 2.0.5, >= 2.0.5)
