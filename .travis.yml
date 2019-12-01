@@ -1,6 +1,6 @@
 language: ruby
 
 env:
-  - "ROOT_PATH=/home/travis/build/switzersc/hsds_transformer"
+  - "ROOT_PATH=/home/travis/build/openreferral/hsds-transformer"
 
 script: bundle exec rspec spec
