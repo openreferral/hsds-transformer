@@ -54,7 +54,7 @@ Then you will be able to use the Transformer as documented below in "Transformin
 If you're familiar with Ruby and you want to use this tool in the command line, you can open an IRB shell and require the library, and begin transforming data:
 
 1. Make sure your data is saved locally as CSVs in the transformer directory (or whatever directory you set `ROOT_PATH` env variable to in step 3 above).
-2. Create a mapping.yaml file and save it locally in the same directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/hsds_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
+2. Create a mapping.yaml file and save it locally in the same directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/openreferral/hsds-transformer/blob/master/spec/fixtures/base_transformer/mapping.yaml) for an example.
 3. Open up an interactive Ruby session in terminal by running `irb` (or `pry` - up to you!)
 4. Require the class: `require "./lib/hsds_transformer"`
 5. Run the transformer: 
