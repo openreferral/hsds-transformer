@@ -19,7 +19,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   The HSDS Transformer enables you to transform CSVs of health and human services
   data into a datapackage compliant with Open Referral's Human Services Data
   Specification format.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/hsds-transformer" # the subpath of your site, e.g. /blog
 url: "https://openreferral.github.io"
 twitter_username: openreferral
 github_username:  openreferral
