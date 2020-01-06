@@ -32,17 +32,29 @@ If it is, voila!
 
 If it's not, proceed.
 
-### Installing
+Note: Your source data must live in a single directory and be stored as CSVs.
+
+### Using this as a gem
+Make sure you have `bundler` installed, and then run:
+```
+gem install hsds_transformer
+```
+or add `hsds_transformer` to your Gemfile.
+
+Then you will be able to use the Transformer as documented below in "Transforming using the Ruby library". Instead of setting the `ROOT_PATH` env as the HSDS Transformer project directory, however, you will need to set this env variable as the path to the directory your source data is stored in. 
+
+### Installing locally (not using as a gem)
 1. Clone this repo locally.
 2. In terminal, `cd` into the root of the hsds_transformer directory.
 3. Create a new file called `.env`. Copy the contents of `.env.example` into the new `.env` file and update `Users/your_user/dev/hsds_transformer` to be the correct path to this directory on your local environment (you can run `pwd` in terminal to find this out).
 4. Install all the gems by running `bundle install`
 
-### Transforming
-Here's how to transform the data if you're familiar with Ruby:
 
-1. Make sure your data is saved locally as CSVs in this directory.
-2. Create a mapping.yaml file and store it locally in this directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/hsds_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
+### Transforming using the Ruby library
+If you're familiar with Ruby and you want to use this tool in the command line, you can open an IRB shell and require the library, and begin transforming data:
+
+1. Make sure your data is saved locally as CSVs in the transformer directory (or whatever directory you set `ROOT_PATH` env variable to in step 3 above).
+2. Create a mapping.yaml file and save it locally in the same directory. This is what tells the transformer how to map fields from one set of CSVs into the HSDS format. See [spec/fixtures/mapping.yaml](https://github.com/switzersc/hsds_transformer/blob/master/spec/fixtures/mapping.yaml) for an example. 
 3. Open up an interactive Ruby session in terminal by running `irb` (or `pry` - up to you!)
 4. Require the class: `require "./lib/hsds_transformer"`
 5. Run the transformer: 
@@ -51,11 +63,19 @@ HsdsTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/map
 ```
 6. Now check the `tmp` directory for your newly created HSDS files!
 
-You can also pass two additional arguments to the `.run` command: `include_custom` and `zip_output`. The output is by default not zipped, but if you want it to be, you can pass `true` as the value of this field. If your input data includes non-HSDS fields you want to see in the output files as well, you can pass `true` for `include_custom`.
+You can also pass two additional arguments to the `.run` command: `include_custom` and `zip_output`. The output is by default not zipped, but if you want it to be, you can pass `true` as the value of this argument:
+```
+HsdsTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/", zip_output: true)
+```
 
-### Using the API
+If your input data includes non-HSDS fields you want to see in the output files as well, you can pass `true` for `include_custom`.
+```
+HsdsTransformer::Runner.run(input_dir: "/path/to/input/", mapping: "/path/to/mapping.yaml", output_dir: "/path/to/output/", include_custom: true)
+```
 
-Start the API from the root of the project directory:
+### Using the API without Docker
+
+If you don't want to use this as a Ruby library, you can use it as an HTTP API. Start the API from the root of the project directory:
 
 `rackup -p 4567`
 
@@ -70,7 +90,7 @@ The response will be a zip file of the transformed data. You can also pass add `
 
 The API then streams a zip file back with the properly transformed data. The zip is also saved locally on the API server (maybe your local env) at `data.zip` in the root directory
 
-### Starting the API with Docker
+### Using the API with Docker
 Before anything else, make sure you have docker installed and running.
 
 First, build the image locally:
@@ -100,7 +120,6 @@ or when making a request to the API:
 ```
 curl -X POST -F "custom_transformer=Open211MiamiTransformer" -F "input_path=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/input" -F "mapping=/Users/gwalchmai/Dev/hsds_transformer/spec/fixtures/mapping.yaml" http://localhost:4567/transform
 ```
-
 
 ## Examples
 You can find examples of data and mappings in the `examples` directory.
