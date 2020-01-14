@@ -138,17 +138,44 @@ module HsdsTransformer
         path_var = instance_variable_get "@output_#{model}_path"
         write_csv path_var, headers(collection_ivar(model).first, model), collection_ivar(model)
       end
+      write_datapackage_json
+    end
+
+    def write_datapackage_json
+      package = DataPackage::Package.new
+
+      # Is the output path in the file tree of the current directory? If so, we can work with it; if not, we can't.
+      # Due to "safe" file path requirements in the datapackage-rb library
+      path_chunks = output_datapackage_path.split(Dir.pwd)
+      if path_chunks[0] == ""
+        base_dir, remaining_path = parse_path(path_chunks)
+        descriptor = package.infer(directory: "#{remaining_path}/data", base_path: base_dir)
+        content_to_write = descriptor.to_json
+      else
+        content_to_write = File.read(default_datapackage_json_path)
+      end
+      File.open(output_datapackage_file_path, "wb") { |f| f.write(content_to_write) }
+    end
+
+    # Returns for example: ['tmp', 'input/data']
+    def parse_path(path_chunks)
+      path = path_chunks[1]
+      subpath_chunks = path.split("/")
+      base_dir = subpath_chunks[1]
+      remaining_path = subpath_chunks[2..-1].join("/")
+      [base_dir, remaining_path]
     end
 
     def zip_output
-      input_data_files = Dir.glob(File.join(output_data_path, '**/*'))
+      input_data_files = Dir.glob(File.join(output_data_path, "**/*"))
 
 
       File.delete(zipfile_name) if File.exists?(zipfile_name)
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+
         # Add databpackage.json
-        zipfile.add("datapackage.json", datapackage_json_path)
+        zipfile.add("datapackage.json", output_datapackage_file_path)
 
         # Add data files
         input_data_files.each do |file_path|

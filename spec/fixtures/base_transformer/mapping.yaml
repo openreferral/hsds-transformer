@@ -76,7 +76,7 @@ services.csv:
         required: true
       - model: phones
         field: service_id
-      - model: services_at_location
+      - model: services_at_locations
         field: service_id
       - model: eligibilities
         field: service_id
@@ -124,7 +124,7 @@ services.csv:
       - model: services
         field: organization_id
     Location ID:
-      - model: services_at_location
+      - model: services_at_locations
         field: location_id
     Income standard for eligibility:
       model: eligibilities
