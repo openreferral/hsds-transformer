@@ -4,6 +4,7 @@ require "yaml"
 require "zip"
 require "zip/zip"
 require "rest_client"
+require "datapackage"
 
 require "hsds_transformer/version"
 require "hsds_transformer/file_paths"

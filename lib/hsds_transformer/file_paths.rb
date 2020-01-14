@@ -3,7 +3,8 @@ module HsdsTransformer
     DEFAULT_OUTPUT_PATH = "#{ENV["ROOT_PATH"]}/tmp"
     DEFAULT_INPUT_PATH = "#{ENV["ROOT_PATH"]}/"
 
-    attr_reader :input_path, :output_path, :output_datapackage_path, :output_data_path, :datapackage_json_path,
+    attr_reader :input_path, :output_path, :output_datapackage_path, :output_datapackage_file_path,
+                :output_data_path, :default_datapackage_json_path,
                 :zipfile_name, :output_organizations_path, :output_locations_path, :output_services_path,
                 :output_phones_path, :output_physical_addresses_path, :output_postal_addresses_path,
                 :output_services_at_locations_path, :output_eligibilities_path, :output_contacts_path,
@@ -15,6 +16,7 @@ module HsdsTransformer
       @input_path = args[:input_path] || DEFAULT_INPUT_PATH
       @output_path = args[:output_path] || DEFAULT_OUTPUT_PATH
       @output_datapackage_path = File.join(output_path, "datapackage")
+      @output_datapackage_file_path = File.join(output_path, "datapackage/datapackage.json")
       @output_data_path = File.join(output_datapackage_path, "data")
       @zipfile_name = File.join(output_path, "datapackage.zip")
 
@@ -34,7 +36,7 @@ module HsdsTransformer
       @output_regular_schedules_path = output_data_path + "/regular_schedules.csv"
       @output_service_areas_path = output_data_path + "/service_areas.csv"
 
-      @datapackage_json_path = File.join(ENV["ROOT_PATH"], "lib/datapackage/datapackage.json")
+      @default_datapackage_json_path = File.join(ENV["ROOT_PATH"], "lib/datapackage/datapackage.json")
     end
   end
 end

@@ -20,10 +20,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.8.0', '>= 3.8.0'
   s.add_development_dependency 'rb-readline', '~> 0.5.5', '>= 0.5.5'
   s.add_development_dependency 'rack-test', '~> 1.1.0', '>= 1.1.0'
+  s.add_development_dependency 'pry', '~> 0.12.2', '>= 0.12.2'
 
   s.add_runtime_dependency 'unf_ext', '~> 0.0.7.5', '>= 0.0.7.5'
-  s.add_runtime_dependency 'rubyzip', '~> 1.3.0', '>= 1.3.0'
+  s.add_runtime_dependency 'rubyzip', '~> 2.0.0', '< 2.1.0'
   s.add_runtime_dependency 'zip-zip', '~> 0.3', '>= 0.3'
   s.add_runtime_dependency 'sinatra', '~> 2.0.5', '>= 2.0.5'
   s.add_runtime_dependency 'rest-client', '~> 2.0.2', '>= 2.0.2'
+  s.add_runtime_dependency 'datapackage', '~> 1.1.1', '>= 1.1.1'
 end
