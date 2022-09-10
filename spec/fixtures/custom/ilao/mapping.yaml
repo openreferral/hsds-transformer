@@ -39,7 +39,7 @@ locations.csv:
         required: true
       - model: phones
         field: location_id
-      - model: regular_schedules
+      - model: schedules
         field: location_id
     Field 2:
       model: locations
@@ -51,7 +51,7 @@ locations.csv:
       model: phones
       field: number
     Hours of operation:
-      - model: regular_schedules
+      - model: schedules
         field: hours_of_operation
     Services:
       - model: service_at_locations
