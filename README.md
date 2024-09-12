@@ -5,7 +5,7 @@ This app allows you to convert data into an HSDS-compliant [datapackage](https:/
 
 The [Human Services Data Specification (HSDS)](https://openreferral.readthedocs.io/en/latest/hsds/) is a data model that describes health and human services. 
 
-This transformer currently transforms data into HSDS version 1.1.
+This transformer currently transforms data into HSDS version 2.0.1.
 
 ### Problem statement
 Lots of people have health and human services data, but it's all in different structures and formats. Many groups want to share their data, or use data that's shared with them, but the lack of standardized data or an easy way to standardize the data presents a major barrier.
