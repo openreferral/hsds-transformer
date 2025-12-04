@@ -1,4 +1,7 @@
+⚠️ This repository has been archived. As of [HSDS 3.0](https://github.com/openreferral/specification/releases/v3.0), the output format of this tool is deprecated. There is also ongoing work for a new Transformer tool for the new version of HSDS ⚠️ 
+
 # HSDS Transformer
+
 [![Build Status](https://travis-ci.com/openreferral/hsds-transformer.svg?branch=master)](https://travis-ci.com/openreferral/hsds-transformer)
 ## Overview
 This app allows you to convert data into an HSDS-compliant [datapackage](https://frictionlessdata.io/specs/data-package/).
